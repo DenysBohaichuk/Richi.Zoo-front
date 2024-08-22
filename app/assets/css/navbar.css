@@ -1,0 +1,118 @@
+
+#nav-bar {
+    position: fixed; /* Make it stick/fixed */
+    top: 0; /* Stay on top */
+    transition: top 0.5s; /* Transition effect when sliding down (and up) */
+
+    display: flex;
+    width: 100%;
+    height: 4rem;
+    justify-content: space-between;
+    align-items: center;
+    background: #FFF;
+    font-weight: 500;
+    line-height: 1;
+}
+/*
+.nav-bar:before {
+    content: "";
+    position: absolute;
+    top: -7px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 7px solid transparent;
+
+    left: 77px;
+    border-right-color: #fff;
+    transform: rotate(-50deg);
+}
+.nav-bar:after {
+    content: "";
+    position: absolute;
+    top: -7px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 7px solid transparent;
+
+    right: 77px;
+    border-right-color: #fff;
+    transform: rotate(223deg);
+}*/
+
+
+.action-user{
+    padding: 12px 20px;
+}
+.signup{
+
+}
+.login{
+    display: flex;
+    padding: 7px 21px;
+    border-radius: 15px;
+    color: #ffff !important;
+}
+
+/* Burger Menu Button Styles */
+.burger-menu-button {
+    /* Styles for the burger button */
+    display: none; /* Initially hidden */
+}
+
+.nav-items {
+    margin-left: 30px;
+}
+
+@media (max-width: 992px) {
+    #nav-bar {
+        border-radius: 0 !important;
+        /*padding: 0 30px;*/
+    }
+}
+
+/* Media Query for screens less than 768px */
+@media (max-width: 768px) {
+    #nav-bar {
+        padding: 0 30px;
+    }
+    .nav-items {
+        margin-left: 20px;
+        justify-content: end;
+    }
+
+    .logo-container {
+        padding: 0.5rem 0;
+    }
+
+    .action-user{
+        padding: 12px 0 12px;
+    }
+
+    .burger-menu-button {
+        display: block; /* Show burger button */
+        /* Additional styling for the button */
+    }
+
+    /* Hide other nav elements when burger menu is visible */
+    .nav-action-buttons, .action-user {
+        display: none;
+    }
+    #nav-bar {
+        border-radius: 0; /* Remove border radius */
+        /* Other styles for smaller screens */
+    }
+
+    /* Show nav elements when menu is open */
+    #nav-bar.menu-open .nav-action-buttons,
+    #nav-bar.menu-open .action-user {
+        display: flex;
+    }
+}
+
+@media (max-width: 425px) {
+    #nav-bar .heart-icon, #nav-bar .shopping-cart-icon {
+        display: none;
+    }
+}

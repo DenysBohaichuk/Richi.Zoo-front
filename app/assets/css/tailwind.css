@@ -1,0 +1,26 @@
+@tailwind base;
+/* Firefox */
+/** {
+    scrollbar-width: thin;
+    scrollbar-color: var(--secondary) var(--primary);
+}*/
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 10px; /* встановлює ширину скролбара, включно з thumb */
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent; /* може бути будь-який колір або залишити прозорим */
+    border-radius: 5px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    border-radius: 5px; /* радіус має бути меншим або дорівнювати половині ширини скролбара */
+    border: 2px solid white; /* видима рамка */
+    background-clip: padding-box; /* запобігає витягуванню фону на рамку */
+}
+
+@tailwind components;
+@tailwind utilities;

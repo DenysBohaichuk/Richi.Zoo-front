@@ -1,0 +1,17 @@
+{
+  "navbar": {
+    "market": "Магазин",
+    "categories": "Каталог",
+    "signup": "Реєстрація",
+    "login": "Вхід"
+  },
+
+  "product": {
+    "art": "Артикул",
+    "buy_button": "Купити",
+    "add_basket_button": "В кошик"
+  },
+  "component": {
+    "search_placeholder": "Що б такого смачненького для вашого пухнастого?"
+  }
+}

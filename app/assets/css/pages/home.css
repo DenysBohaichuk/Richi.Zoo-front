@@ -1,0 +1,16 @@
+.categories {
+    background-color: #fff;
+    margin: 15px 0;
+}
+
+.categories section, .categories ul {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
+
+.categories ul > li {
+    display: flex;
+    width: 100%;
+    justify-content: space-evenly;
+}
