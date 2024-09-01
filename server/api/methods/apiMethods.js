@@ -6,6 +6,8 @@
 import {authModule} from "~~/server/services/user/auth/authModule.js";
 import {categoryService} from "~~/server/services/category/categoryService.js";
 import {productService} from "~~/server/services/product/productService.js";
+import {deliveryMethodsService} from "~~/server/services/delivery_methods/deliveryMethodsService.js";
+import {orderService} from "~~/server/services/orders/orderService.js";
 
 export const apiMethods = {
     /**
@@ -55,5 +57,19 @@ export const apiMethods = {
      */
     async getProductsBySearch(query){
         return await productService.getProductsBySearch(query);
+    },
+
+    /**
+     * Отримання методів доставки
+     */
+    async getDeliveryMethods(){
+        return await deliveryMethodsService.getDeliveryMethods();
+    },
+
+    /**
+     * Створення замовлення
+     */
+    async createOrder(payload){
+        return await orderService.createOrder(payload);
     }
 }

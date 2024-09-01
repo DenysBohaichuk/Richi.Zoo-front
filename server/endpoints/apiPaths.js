@@ -7,7 +7,11 @@ const apiPaths = {
     categories: '/categories/get-list-categories',
 
     products: '/products/get-product',
-    search_product: '/search-product'
+    search_product: '/products/search-product',
+
+    delivery_methods: '/delivery-methods',
+
+    create_order: '/create-order'
 };
 
 export default apiPaths;

@@ -9,6 +9,9 @@ export const useFavoriteProductStore = defineStore('favorite.products', {
     actions: {
         getData(){
             this.favoriteProducts = JSON.parse(window.localStorage.getItem('favoriteProducts'));
+        },
+        setData(products){
+            window.localStorage.setItem('favoriteProducts', JSON.stringify(products.value));
         }
     }
 });

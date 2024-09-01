@@ -21,7 +21,8 @@
                       :placeholder="$t('component.search_placeholder')"
                       class="w-full px-6 py-3 text-lg border border-gray-300 rounded-full shadow-lg focus:outline-none bg-white"
                   />
-                  <ul v-if="results.length" class="absolute left-0 right-0 bg-white shadow-lg rounded-lg mt-1 z-10 overflow-auto max-h-80">
+                  <ul v-if="results.length"
+                      class="absolute top-full left-0 right-0 bg-white shadow-lg rounded-3xl mt-1 z-10 overflow-auto max-h-80">
                     <li
                         v-for="(result, index) in results"
                         :key="index"
@@ -35,6 +36,10 @@
                       </div>
                     </li>
                   </ul>
+                  <div v-else
+                       class="absolute top-full left-0 right-0 bg-white shadow-lg rounded-xl mt-1 z-10 overflow-auto max-h-80">
+                    <p class="px-4 py-2">Нажаль ми нічого не знайшли :(</p>
+                  </div>
                 </DialogPanel>
               </TransitionChild>
             </div>
@@ -87,20 +92,6 @@ const selectAndRedirect = (productId) => {
 </script>
 
 <style scoped>
-/* Стиль, щоб результати відображалися під input */
-ul {
-  position: absolute;
-  top: 100%; /* Це робить список видимим під полем */
-  left: 0;
-  right: 0;
-  z-index: 10;
-  margin-top: 0.5rem; /* Додаємо невеликий відступ зверху */
-  border-radius: 12px; /* Закруглені краї */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Тінь для списку */
-  max-height: 20rem; /* Обмеження висоти списку (320px) */
-  overflow-y: auto; /* Додаємо скролл при великій кількості результатів */
-  background-color: white; /* Білий фон */
-}
 
 li {
   display: flex;

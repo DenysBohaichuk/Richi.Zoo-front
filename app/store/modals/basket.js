@@ -15,6 +15,9 @@ export const useProductBasketStore = defineStore('modals.basket', {
         },
         getData(){
             this.productBasket = JSON.parse(window.localStorage.getItem('productBasket'));
+        },
+        setData(products){
+            window.localStorage.setItem('productBasket', JSON.stringify(products.value));
         }
     }
 });

@@ -16,90 +16,81 @@
                 <form
                     class="relative flex w-full flex-col overflow-hidden bg-white pb-8 pt-6 sm:rounded-lg sm:pb-6 lg:py-8">
                   <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8">
-                    <h2 class="text-lg font-medium text-gray-900">Shopping Cart</h2>
+                    <h2 class="text-lg font-medium text-gray-900">{{ $t('basket.header') }}</h2>
                     <button type="button" class="text-gray-400 hover:text-gray-500"
                             @click="productBasketStore.closeModal()">
-                      <span class="sr-only">Close</span>
                       <XMarkIcon class="h-6 w-6" aria-hidden="true"/>
                     </button>
                   </div>
 
                   <section aria-labelledby="cart-heading">
-                    <h2 id="cart-heading" class="sr-only">Items in your shopping cart</h2>
+                    <ul v-if="products && products.length !== 0" role="list" class="divide-y divide-gray-200 px-4 sm:px-6 lg:px-8">
+                      <li v-for="(product, productIdx) in products" :key="product.id" class="flex px-4 py-6 sm:px-6">
+                        <div class="flex-shrink-0">
+                          <NuxtImg :src="product.images[0]" alt="image" class="w-20 rounded-md"/>
+                        </div>
 
-                    <ul role="list" class="divide-y divide-gray-200 px-4 sm:px-6 lg:px-8">
-                      <li v-for="(product, productIdx) in products" :key="product.id"
-                          class="flex py-8 text-sm sm:items-center">
-                        <img :src="product.images[0]" alt="image"
-                             class="h-24 w-24 flex-none rounded-lg border border-gray-200 sm:h-32 sm:w-32"/>
-                        <div
-                            class="ml-4 grid flex-auto grid-cols-1 grid-rows-1 items-start gap-x-5 gap-y-3 sm:ml-6 sm:flex sm:items-center sm:gap-0">
-                          <div class="row-end-1 flex-auto sm:pr-6">
-                            <h3 class="font-medium text-gray-900">
-                              <NuxtLink href="#">{{ product.name }}</NuxtLink>
-                            </h3>
-                            <!--                          <p class="mt-1 text-gray-500">{{ product.color }}</p>-->
+                        <div class="ml-6 flex flex-1 flex-col">
+                          <div class="flex">
+                            <div class="min-w-0 flex-1">
+                              <h4 class="text-sm">
+                                <NuxtLink :to="`/product/${product.id}`"
+                                          @click="productBasketStore.closeModal()"
+                                          class="font-medium text-gray-700 hover:text-gray-800">{{ product.name }}</NuxtLink>
+                              </h4>
+                              <ul class="mt-2 flex space-x-8">
+                                <li v-for="(feature, index) in computeFeatureTypes(product)" :key="index" class="text-gray-500">
+                                  <div :class="{'border-l border-gray-200 pl-4': index !== 0}">
+                                    <h5 class="font-semibold text-sm text-gray-700">{{ feature.name }}</h5>
+                                    <p class="text-sm text-gray-600">{{ feature.value }}</p>
+                                  </div>
+                                </li>
+                              </ul>
+                            </div>
+
+                            <div class="ml-4 flow-root flex-shrink-0">
+                              <button type="button" @click="removeFromBasket(product)"
+                                      class="-m-2.5 flex items-center justify-center bg-white p-2.5 text-gray-400 hover:text-gray-500">
+                                <span class="sr-only">Remove</span>
+                                <TrashIcon class="h-5 w-5" aria-hidden="true"/>
+                              </button>
+                            </div>
                           </div>
-                          <p class="row-span-2 row-end-2 font-medium text-gray-900 sm:order-1 sm:ml-6 sm:w-1/3 sm:flex-none sm:text-right">
-                            {{ product.price }}</p>
-                          <div class="flex items-center sm:block sm:flex-none sm:text-center">
-                            <label :for="`quantity-${productIdx}`" class="sr-only">Quantity, {{ product.name }}</label>
-                            <select :id="`quantity-${productIdx}`" :name="`quantity-${productIdx}`"
-                                    class="block max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                              <option value="4">4</option>
-                              <option value="5">5</option>
-                              <option value="6">6</option>
-                              <option value="7">7</option>
-                              <option value="8">8</option>
-                              <option value="9">9</option>
-                              <option value="10">10</option>
-                            </select>
 
-                            <button type="button" @click="removeFromBasket(product)"
-                                    class="ml-4 font-medium text-indigo-600 hover:text-indigo-500 sm:ml-0 sm:mt-2">
-                              <span>Remove</span>
-                            </button>
+                          <div class="flex flex-1 items-end justify-between pt-2">
+                            <p class="mt-1 text-sm font-medium text-gray-900">{{ product.price }}</p>
+
+                            <div class="ml-4">
+                              <label :for="`quantity-${productIdx}`" class="sr-only">Quantity, {{ product.name }}</label>
+                              <select :id="`quantity-${productIdx}`" v-model="product.quantity" @change="saveBasketToLocalStorage()" class="block max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
+                                <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
+                              </select>
+                            </div>
                           </div>
                         </div>
                       </li>
                     </ul>
+                    <div v-else class="text-center text-gray-500 py-8">{{ $t('basket.empty') }}</div>
                   </section>
 
-                  <section aria-labelledby="summary-heading" class="mt-auto sm:px-6 lg:px-8">
+                  <section aria-labelledby="summary-heading" class="mt-auto sm:px-6 lg:px-8" v-if="products && products.length !== 0">
                     <div class="bg-gray-50 p-6 sm:rounded-lg sm:p-8">
-                      <h2 id="summary-heading" class="sr-only">Order summary</h2>
-
                       <div class="flow-root">
                         <dl class="-my-4 divide-y divide-gray-200 text-sm">
-                          <!--                       <div class="flex items-center justify-between py-4">
-                                                  <dt class="text-gray-600">Subtotal</dt>
-                                                  <dd class="font-medium text-gray-900">$262.00</dd>
-                                                </div>
-                                                <div class="flex items-center justify-between py-4">
-                                                  <dt class="text-gray-600">Shipping</dt>
-                                                  <dd class="font-medium text-gray-900">$5.00</dd>
-                                                </div>
-                                                <div class="flex items-center justify-between py-4">
-                                                  <dt class="text-gray-600">Tax</dt>
-                                                  <dd class="font-medium text-gray-900">$53.40</dd>
-                                                </div>-->
                           <div class="flex items-center justify-between py-4">
-                            <dt class="text-base font-medium text-gray-900">Order total</dt>
-                            <dd class="text-base font-medium text-gray-900">$320.40</dd>
+                            <dt class="text-base font-medium text-gray-900">{{ $t('basket.order_total') }}</dt>
+                            <dd class="text-base font-medium text-gray-900">{{ totalAmount }} грн</dd>
                           </div>
                         </dl>
                       </div>
                     </div>
                   </section>
 
-                  <div class="mt-8 flex justify-end px-4 sm:px-6 lg:px-8">
-                    <button type="submit"
+                  <div v-if="products && products.length !== 0" class="mt-8 flex justify-end px-4 sm:px-6 lg:px-8">
+                    <NuxtLink @click="useProductBasketStore().closeModal()" to="/checkout"
                             class="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
-                      Continue to Payment
-                    </button>
+                      {{ $t('basket.continue_payment') }}
+                    </NuxtLink>
                   </div>
                 </form>
               </DialogPanel>
@@ -112,19 +103,44 @@
 </template>
 
 <script setup>
-import {Dialog, DialogPanel, TransitionChild, TransitionRoot} from '@headlessui/vue'
-import {XMarkIcon} from '@heroicons/vue/24/outline'
-import {useProductBasketStore} from "~/store/modals/basket.js";
-import {useProductsBasket} from "~/composables/products/basketHandler.js";
+import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { XMarkIcon } from '@heroicons/vue/24/outline'
+import { computed } from 'vue';
+import { useProductBasketStore } from "~/store/modals/basket.js";
+import { useProductsBasket } from "~/composables/products/basketHandler.js";
+import {TrashIcon} from "@heroicons/vue/20/solid/index.js";
 
 const productBasketStore = useProductBasketStore();
 const open = computed(() => productBasketStore.open);
-
-const products = computed(() => productBasketStore.productBasket)
+const products = computed(() => productBasketStore.productBasket);
 
 function removeFromBasket(product){
   const { removeProductFromBasket } = useProductsBasket(product);
   removeProductFromBasket();
 }
 
+const totalAmount = computed(() => {
+  return products.value.reduce((total, product) => {
+    const quantity = product.quantity ? parseInt(product.quantity, 10) : 1; // Використовуємо quantity з product або значення 1 за замовчуванням
+    return total + (product.price * quantity);
+  }, 0).toFixed(2); // Округлення до двох десяткових знаків
+});
+
+function saveBasketToLocalStorage() {
+  useProductBasketStore().setData(products)
+}
+
+function computeFeatureTypes(product) {
+  const types = {};
+  product.product_features.forEach(feature => {
+    if (feature.pivot.is_selected === 1) {
+      const typeName = feature.feature_type.name;
+      if (!types[typeName]) {
+        types[typeName] = { id: feature.feature_type.id, name: typeName, value: '' };
+      }
+      types[typeName].value += feature.value;
+    }
+  });
+  return Object.values(types);
+}
 </script>

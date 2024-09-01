@@ -33,25 +33,6 @@
   </NuxtLink>
 </template>
 
-<style scoped>
-/* Задайте стилі для "enter" і "leave" анімацій */
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.2s;
-}
-
-/* Визначте початковий стан для елемента, який з'являється */
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-}
-
-/* Визначте кінцевий стан для елемента, який з'являється */
-.fade-enter-to {
-  opacity: 1;
-}
-
-
-</style>
-
 <script setup>
 import {HeartIcon as HeartOutlineIcon} from "@heroicons/vue/24/outline";
 import {HeartIcon as HeartSolidIcon} from "@heroicons/vue/24/solid";
@@ -61,6 +42,9 @@ import {useProductBasketStore} from "~/store/modals/basket.js";
 const props = defineProps({
   product: Object
 });
+const product = reactive(props.product);
+product.quantity = 1;
+
 const {reactiveFavoriteProduct, toggleFavoriteProduct, loadFavoriteItems} = useFavoriteProducts(props.product);
 
 function setIconStateFromStorage() {
@@ -79,3 +63,22 @@ const { openModal } = useProductBasketStore();
 
 
 </script>
+
+<style scoped>
+/* Задайте стилі для "enter" і "leave" анімацій */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s;
+}
+
+/* Визначте початковий стан для елемента, який з'являється */
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+/* Визначте кінцевий стан для елемента, який з'являється */
+.fade-enter-to {
+  opacity: 1;
+}
+
+
+</style>

@@ -1,13 +1,16 @@
 <template>
   <div class="page-container">
-   <UISwiperMainSwiper/>
+<!--    <UISwiperMainSwiper/>-->
 
 
-    <div class="categories">
-      <section class="border-dashed border-b-2" v-for="(section, index) in sectionedCategories" :key="index">
+    <div class="categories rounded-lg">
+      <section class="" v-for="(section, index) in sectionedCategories" :key="index">
         <ul>
-          <li v-for="category in section" :key="category.id" class="border-dashed border-r-2">
-            <NuxtLink :to="`/category/${category.slug}`" class="text-lg block py-4 text-center w-full h-full hover:bg-gray-100 hover:text-сerulean hover:shadow-[0_0px_12px_1px_rgb(0,0,0,0.2)]">
+          <li v-for="category in section" :key="category.id" class="rounded-lg">
+            <NuxtLink :to="`/category/${category.slug}`"
+                      class="flex justify-center text-lg block py-4 text-center w-full h-full hover:bg-gray-100 hover:text-сerulean transition-colors duration-200 rounded-lg">
+              <div v-if="!category.icon" class="h-6 w-6 flex-none"></div>
+              <img v-else :src="category.icon" alt="" class="h-6 w-6 flex-none text-gray-400" aria-hidden="true"/>
               {{ category.name }}
             </NuxtLink>
           </li>
@@ -19,27 +22,19 @@
 </template>
 
 <script setup>
-import { ref, computed, onBeforeMount } from 'vue';
-import { useModalInfoStore } from "~/store/modals/info.js";
-import {apiMethods} from "~~/server/api/methods/apiMethods.js";
+import {ref, computed, onBeforeMount} from 'vue';
 
+import {getDataFromStore} from "~/mixins/MixinNavbarCategories.js";
+/*definePageMeta({
+  middleware: ['redirect'],
+});*/
 const categories = ref([]);
-const modalInfoStore = useModalInfoStore();
 
 onBeforeMount(async () => {
-  try {
-    const response = await apiMethods.getListCategories();
-    if (response.status) {
-      categories.value = response.data;
-    } else {
-      const errorMessage = response.message || 'Error fetching categories';
-      modalInfoStore.openModal(errorMessage);
-    }
-  } catch (error) {
-    modalInfoStore.openModal(false, error.message);
-  }finally {
-    setPageLayout('default');
-  }
+  const data = await getDataFromStore();
+  categories.value = data.categoriesDropdown;
+
+  setPageLayout('default');
 });
 
 const sectionedCategories = computed(() => {
@@ -52,6 +47,7 @@ const sectionedCategories = computed(() => {
   }
   return sections;
 });
+
 </script>
 
 

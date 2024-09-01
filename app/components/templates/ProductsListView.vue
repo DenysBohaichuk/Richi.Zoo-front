@@ -165,6 +165,7 @@ import {
 } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/vue/20/solid'
+const config = useAppConfig();
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -221,9 +222,55 @@ const filters = [
 const mobileFiltersOpen = ref(false)
 
 
-defineProps({
-  category: Array,
+// Отримуємо `category` та `products` з props
+const props = defineProps({
+  category: Object,
   products: Array
 });
 
+// Тепер `category` та `products` доступні через `props`
+const category = props.category;
+const products = props.products;
+
+// Визначаємо текст для мета-опису
+const categoryDescription = category.plainDescription?.trim() || 'Перегляньте наші товари у категорії...';
+
+useHead({
+  title: category.name + ' | ' + config.projectName,
+  meta: [
+    { name: 'robots', content: 'index, follow' },
+    { name: 'description', content: categoryDescription },
+    { property: 'og:title', content: category.name + ' | ' + config.projectName },
+    { property: 'og:description', content: categoryDescription },
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": products.map((product, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "url": config.domain + '/product/' + product.id,
+          "item": {
+            "@type": "Product",
+            "name": product.name,
+            "image": product.images[0],
+            "description": product.plainDescription,
+            "sku": product.barcode,
+            "offers": {
+              "@type": "Offer",
+              "url": config.domain + '/product/' + product.id,
+              "priceCurrency": "UAH",
+              "price": product.price,
+              "availability": "https://schema.org/InStock",
+              "itemCondition": "https://schema.org/NewCondition"
+            }
+          }
+        }))
+      })
+    }
+  ]
+});
 </script>

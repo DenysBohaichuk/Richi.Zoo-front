@@ -254,7 +254,6 @@
 
 <script setup>
 
-
 import {useProductsBasket} from "~/composables/products/basketHandler.js";
 
 definePageMeta({
@@ -283,27 +282,11 @@ const updateIndicator = (index, groupIndex) => {
   }
 };
 
-// Ініціалізація індикаторів на першому табі кожної групи
-onMounted(() => {
-  tabRefs.value.forEach((tabs, groupIndex) => {
-    if (tabs.length > 0) {
-      updateIndicator(0, groupIndex);
-    }
-  });
-});
+
 import {ref} from 'vue'
 import {HeartIcon as HeartOutlineIcon} from "@heroicons/vue/24/outline";
 import {HeartIcon as HeartSolidIcon} from "@heroicons/vue/24/solid";
 import {
-  Dialog,
-  DialogPanel,
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Popover,
-  PopoverButton,
-  PopoverGroup,
-  PopoverPanel,
   RadioGroup,
   RadioGroupLabel,
   RadioGroupOption,
@@ -312,23 +295,12 @@ import {
   TabList,
   TabPanel,
   TabPanels,
-  TransitionChild,
-  TransitionRoot,
 } from '@headlessui/vue'
-import {
-  Bars3Icon,
-  HeartIcon,
-  MagnifyingGlassIcon,
-  MinusIcon,
-  PlusIcon,
-  ShoppingBagIcon,
-  UserIcon,
-  XMarkIcon,
-} from '@heroicons/vue/24/outline'
-import {StarIcon} from '@heroicons/vue/20/solid'
+
 import {getDataFromStore} from "~/mixins/MixinProduct.js";
 import {useProductBasketStore} from "~/store/modals/basket.js";
 
+const config = useAppConfig();
 
 const open = ref(false)
 
@@ -400,7 +372,6 @@ const tabTermsOfOrder = ref([
   }
 ]);
 
-
 const data = await getDataFromStore();
 const product = ref(null);
 const productFeatures = ref(null);
@@ -411,6 +382,7 @@ const {addProductToBasket} = useProductsBasket(data.product);
 const {openModal} = useProductBasketStore();
 
 product.value = data.product;
+product.value.quantity = 1;
 productFeatures.value = product.value.product_features;
 productTypes.value = data.productTypes;
 productImages.value = product.value.images
@@ -421,11 +393,13 @@ const featureTypes = computed(() => {
   const types = {};
   productTypes.value.forEach(product => {
     product.product_features.forEach(feature => {
-      const typeName = feature.feature_type.name;
-      if (!types[typeName]) {
-        types[typeName] = {id: feature.feature_type.id, name: typeName, options: []};
+      if (feature.pivot.is_selected === 1) {
+        const typeName = feature.feature_type.name;
+        if (!types[typeName]) {
+          types[typeName] = {id: feature.feature_type.id, name: typeName, options: []};
+        }
+        types[typeName].options.push({...feature, product});
       }
-      types[typeName].options.push({...feature, product});
     });
   });
   return Object.values(types);
@@ -477,9 +451,45 @@ function setIconStateFromStorage() {
 
 onMounted(() => {
   setIconStateFromStorage();
+
+  tabRefs.value.forEach((tabs, groupIndex) => {
+    if (tabs.length > 0) {
+      updateIndicator(0, groupIndex);
+    }
+  });
 });
 
-
+useHead({
+  title: `${product.value.name} | ${config.projectName}`,
+  meta: [
+    { name: 'robots', content: 'index, follow' },
+    { name: 'description', content: product.value.plainDescription  },
+    { property: 'og:title', content: `${product.value.name} | ${config.projectName}` },
+    { property: 'og:description', content: product.value.plainDescription },
+    { property: 'og:image', content: product.value.images[0] }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Product",
+        "name": product.value.name,
+        "image": product.value.images[0],
+        "description": product.value.plainDescription,
+        "sku": product.value.barcode,
+        "offers": {
+          "@type": "Offer",
+          "url": config.domain + '/product/' + product.value.id,
+          "priceCurrency": "UAH",
+          "price": product.value.price,
+          "availability": "https://schema.org/InStock",
+          "itemCondition": "https://schema.org/NewCondition"
+        }
+      })
+    }
+  ]
+})
 </script>
 
 <style scoped>

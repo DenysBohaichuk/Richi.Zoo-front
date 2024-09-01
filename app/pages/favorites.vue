@@ -3,12 +3,13 @@
 <template>
   <div class="bg-white">
     <div class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 sm:max-w-7xl lg:px-8">
-      <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Shopping Cart</h1>
+      <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{$t('favorites.header')}}</h1>
       <div class="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
-        <section aria-labelledby="cart-heading" class="lg:col-span-12">
-          <h2 id="cart-heading" class="sr-only">Items in your shopping cart</h2>
-
-          <ul role="list" class="divide-y divide-gray-200 border-b border-t border-gray-200">
+        <section aria-labelledby="cart-heading" class="divide-y divide-gray-200 border-t border-gray-200 lg:col-span-12">
+          <div v-if="products.length === 0" class="text-center text-gray-500 py-8">
+            {{ $t('favorites.empty') }}
+          </div>
+          <ul v-else role="list">
             <li v-for="(product, productIdx) in products" :key="product.id" class="flex py-6 sm:py-10">
               <div class="flex-shrink-0">
                 <img :src="product.images[0]" alt="image" class="h-24 w-24 rounded-md object-cover object-center sm:h-48 sm:w-48" />
@@ -22,26 +23,26 @@
                         <a :href="product.href" class="font-medium text-gray-700 hover:text-gray-800">{{ product.name }}</a>
                       </h3>
                     </div>
+                    <p class="mt-1 text-sm font-medium text-gray-900">{{ product.price }} грн</p>
                     <div class="mt-1 flex text-sm">
-                      <p class="text-gray-500">{{ product.color }}</p>
-                      <p v-if="product.size" class="ml-4 border-l border-gray-200 pl-4 text-gray-500">{{ product.size }}</p>
+<!--                      <p class="text-gray-500">{{ product.color }}</p>
+                      <p v-if="product.size" class="ml-4 border-l border-gray-200 pl-4 text-gray-500">{{ product.size }}</p>-->
+                      <li v-for="(feature, index) in computeFeatureTypes(product)" :key="feature.id"
+                          :class="{
+      'ml-4 border-l border-gray-200 pl-4': index !== 0,
+      'text-gray-500': true
+    }">
+                        <h5 class="font-semibold">{{ feature.name }}</h5>
+                        <p class="text-gray-600">{{ feature.value }}</p>
+                      </li>
+
                     </div>
-                    <p class="mt-1 text-sm font-medium text-gray-900">{{ product.price }}</p>
                   </div>
 
                   <div class="mt-4 sm:mt-0 sm:pr-9">
-                    <label :for="`quantity-${productIdx}`" class="sr-only">Quantity, {{ product.name }}</label>
-                    <select :id="`quantity-${productIdx}`" :name="`quantity-${productIdx}`" class="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
+                    <label :for="`quantity-${product.id}`" class="sr-only">Quantity</label>
+                    <select :id="`quantity-${product.id}`" :name="`quantity-${product.id}`" v-model="product.quantity" @change="saveFavoritesToLocalStorage()" class="max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm" ref="quantitySelect">
+                      <option v-for="n in 10" :key="n" :value="n">{{ n }}</option>
                     </select>
 
                     <div class="absolute right-0 top-0">
@@ -51,7 +52,7 @@
                       </button>
                     </div>
 
-                    <UIButtonsSimpleSkyButton class="absolute bottom-0 right-0" :text="$t('product.add_basket_button')" @click="addToBasket(product)"/>
+                    <UIButtonsSimpleSkyButton class="absolute bottom-0 right-0" :text="$t('product.add_basket_button')" @click="() => addToBasket(product)"/>
                   </div>
                 </div>
 
@@ -123,14 +124,40 @@ function toggleFavoriteProduct(product) {
   toggleFavoriteProduct();
 }
 
-function addToBasket(product){
-  const { addProductToBasket } = useProductsBasket(product);
+function addToBasket(product) {
+  // Отримання кількості для конкретного продукту
+  const selectElement = document.querySelector(`#quantity-${product.id}`);
+  const quantity = selectElement ? selectElement.value : 1; // Значення за замовчуванням - 1, якщо кількість не вказана
+
+  // Додавання нової властивості до продукту
+  const productWithQuantity = { ...product, quantity };
+
+  const { addProductToBasket } = useProductsBasket(productWithQuantity);
   addProductToBasket();
 }
 
 onMounted(()=>{
   favoriteProductStore.getData();
 })
+
+
+function computeFeatureTypes(product) {
+  const types = {};
+  product.product_features.forEach(feature => {
+    if (feature.pivot.is_selected === 1) {
+      const typeName = feature.feature_type.name;
+      if (!types[typeName]) {
+        types[typeName] = { id: feature.feature_type.id, name: typeName, value: '' };
+      }
+      types[typeName].value += feature.value;
+    }
+  });
+  return Object.values(types);
+}
+
+function saveFavoritesToLocalStorage() {
+  useFavoriteProductStore().setData(products)
+}
 
 </script>
 
