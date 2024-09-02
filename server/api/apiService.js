@@ -1,10 +1,9 @@
 import { ref } from 'vue';
-import apiClient from "~~/server/api/client/apiClient.js";
 
-const networkErr = {status: false, error: {message:"Немає з'єднання з сервером."}};
-const undefinedErr = {status: false, error: {message:"Невідома помилка(."}};
+const networkErr = { status: false, error: { message: "Немає з'єднання з сервером." }};
+const undefinedErr = { status: false, error: { message: "Невідома помилка." }};
 
-export default function apiService() {
+export default function apiService(apiClient) {
     const response = ref(null);
     const data = ref(null);
     const isLoading = ref(false);
@@ -19,7 +18,7 @@ export default function apiService() {
             console.log(err);
             if (err.message === "Network Error") {
                 response.value = networkErr;
-            }else {
+            } else {
                 response.value = undefinedErr;
             }
         } finally {
@@ -37,7 +36,7 @@ export default function apiService() {
         } catch (err) {
             if (err.message === "Network Error") {
                 response.value = networkErr;
-            }else {
+            } else {
                 response.value = err;
             }
         } finally {
@@ -54,7 +53,7 @@ export default function apiService() {
         } catch (err) {
             if (err.message === "Network Error") {
                 response.value = networkErr;
-            }else {
+            } else {
                 response.value = err;
             }
         } finally {
@@ -71,7 +70,7 @@ export default function apiService() {
         } catch (err) {
             if (err.message === "Network Error") {
                 response.value = networkErr;
-            }else {
+            } else {
                 response.value = err;
             }
         } finally {
@@ -79,5 +78,5 @@ export default function apiService() {
         }
     };
 
-    return {response, data, isLoading, fetchData, createData, updateData, deleteData };
+    return { response, data, isLoading, fetchData, createData, updateData, deleteData };
 }

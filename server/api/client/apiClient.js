@@ -1,11 +1,17 @@
-// apiClient.js
+// plugins/apiClient.js
+import { defineNuxtPlugin, useRuntimeConfig } from '#app';
 import axios from 'axios';
 
-const APP_URL = this.$config.appURL;
+export default defineNuxtPlugin(() => {
+    const config = useRuntimeConfig();
+    const apiClient = axios.create({
+        baseURL: config.public.apiURL,
+        // інші глобальні налаштування
+    });
 
-const apiClient = axios.create({
-    baseURL: APP_URL,
-    // інші глобальні налаштування
+    return {
+        provide: {
+            apiClient
+        }
+    };
 });
-
-export default apiClient;

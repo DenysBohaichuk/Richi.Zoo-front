@@ -22,8 +22,12 @@ export default defineNuxtConfig({
         '@nuxtjs/robots'
     ],
 
+    plugins: [
+        '../server/api/client/apiClient.js' // Додаємо шлях до вашого плагіна
+    ],
+
     sitemap: {
-        hostname: process.env.APP_URL,
+        hostname: 'https://richizoo.com',
         gzip: true,
         routes: async () => {
             // Генерація маршрутів для вашого sitemap

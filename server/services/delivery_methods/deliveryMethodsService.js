@@ -1,19 +1,15 @@
 /**
- * Робота з категоріями
+ * Робота з методами замовленнями
  */
 
-import apiService from '~~/server/api/apiService.js';
+import getApiService from '~~/server/api/getApiService.js';
 import apiPath from '~~/server/endpoints/apiPaths.js';
-import {responseFormat} from "~~/server/api/responses/responseFormat.js";
-
-
-const { response, fetchData } = apiService();
+import { responseFormat } from "~~/server/api/responses/responseFormat.js";
 
 export const deliveryMethodsService = {
-    async getDeliveryMethods(){
-        await fetchData(apiPath.delivery_methods)
+    async getDeliveryMethods() {
+        const { response, fetchData } = getApiService();
+        await fetchData(apiPath.delivery_methods);
         return responseFormat.response(response.value);
-    },
-
-
-}
+    }
+};

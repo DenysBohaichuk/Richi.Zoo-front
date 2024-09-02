@@ -1,19 +1,15 @@
 /**
- * Робота з категоріями
+ * Робота з замовленнями
  */
 
-import apiService from '~~/server/api/apiService.js';
+import getApiService from '~~/server/api/getApiService.js';
 import apiPath from '~~/server/endpoints/apiPaths.js';
-import {responseFormat} from "~~/server/api/responses/responseFormat.js";
-
-
-const { response, createData } = apiService();
+import { responseFormat } from "~~/server/api/responses/responseFormat.js";
 
 export const orderService = {
-    async createOrder(payload){
-        await createData(apiPath.create_order, payload)
+    async createOrder(payload) {
+        const { response, createData } = getApiService();
+        await createData(apiPath.create_order, payload);
         return responseFormat.response(response.value);
-    },
-
-
-}
+    }
+};
