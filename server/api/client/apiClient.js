@@ -1,10 +1,10 @@
 // apiClient.js
 import axios from 'axios';
 
-const BASE_URL = 'http://richizoo.dev.com/api'; // Замініть на ваш базовий URL
+const APP_URL = this.$config.appURL;
 
 const apiClient = axios.create({
-    baseURL: BASE_URL,
+    baseURL: APP_URL,
     // інші глобальні налаштування
 });
 

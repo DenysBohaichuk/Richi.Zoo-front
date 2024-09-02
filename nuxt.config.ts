@@ -7,8 +7,10 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+            appURL: process.env.APP_URL
         },
     },
+
 
     modules: [
         '@nuxtjs/tailwindcss',
