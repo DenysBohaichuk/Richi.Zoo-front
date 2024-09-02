@@ -1,4 +1,4 @@
 export default defineAppConfig({
     projectName: 'Richi.Zoo',
-    domain: 'https://richizoo.com/',
+    domain: process.env.APP_URL,
 })

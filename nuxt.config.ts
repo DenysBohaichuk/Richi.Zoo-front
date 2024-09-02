@@ -7,7 +7,8 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-            appURL: process.env.APP_URL
+            appURL: process.env.APP_URL,
+            apiURL: process.env.API_URL
         },
     },
 
@@ -22,7 +23,7 @@ export default defineNuxtConfig({
     ],
 
     sitemap: {
-        hostname: 'https://richizoo.com',
+        hostname: process.env.APP_URL,
         gzip: true,
         routes: async () => {
             // Генерація маршрутів для вашого sitemap
