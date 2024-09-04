@@ -1,6 +1,6 @@
 // stores/categoryStore.js
 import { defineStore } from 'pinia';
-import {apiMethods} from "~~/server/api/methods/apiMethods.js";
+import {apiMethods} from "~/composables/api/methods/apiMethods.js";
 import {useModalInfoStore} from "~/store/modals/info.js";
 
 export const useNavbarStore = defineStore('navbar', {

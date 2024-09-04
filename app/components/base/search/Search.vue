@@ -55,7 +55,7 @@ import {ref, computed} from 'vue'
 import {useRouter} from 'vue-router'
 import {Dialog, DialogPanel, TransitionChild, TransitionRoot} from "@headlessui/vue";
 import {useSearchComponentStore} from "~/store/components/search.js";
-import {apiMethods} from "~~/server/api/methods/apiMethods.js";
+import {apiMethods} from "~/composables/api/methods/apiMethods.js";
 
 const searchComponent = useSearchComponentStore()
 const open = computed(() => searchComponent.open);

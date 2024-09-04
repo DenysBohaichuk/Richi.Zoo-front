@@ -4,7 +4,7 @@
  * Він виконує роль "прокладки" між зверненням до API та подальшою обробкою даних у внутрішніх компонентах системи,
  * забезпечуючи уніфікований інтерфейс для аутентифікації, реєстрації та управління сесією користувача.
  */
-import AuthService from "~~/server/services/user/auth/authService.js";
+import AuthService from "~/composables/api/services/user/auth/authService.js";
 import {useAuthStore} from "~/store/user/auth.js";
 
 

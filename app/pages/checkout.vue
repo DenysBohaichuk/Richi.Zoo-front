@@ -266,8 +266,8 @@ import {
   warehouseInput,
   onWarehouseFocus,
   onWarehouseBlur
-} from '~~/server/services/nova_poshta/cityWarehouseService.js';
-import {apiMethods} from "~~/server/api/methods/apiMethods.js";
+} from '~/composables/api/services/nova_poshta/cityWarehouseService.js';
+import {apiMethods} from "~/composables/api/methods/apiMethods.js";
 
 // Використовуємо store кошика
 const productBasketStore = useProductBasketStore();

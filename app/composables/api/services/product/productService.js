@@ -2,9 +2,10 @@
  * Робота з товарами
  */
 
-import getApiService from '~~/server/api/getApiService.js';
-import apiPath from '~~/server/endpoints/apiPaths.js';
-import { responseFormat } from "~~/server/api/responses/responseFormat.js";
+import apiPath from '~/composables/api/endpoints/apiPaths.js';
+import { responseFormat } from "~/composables/api/responses/responseFormat.js";
+import getApiService from "~/composables/api/services/getApiService.js";
+
 
 export const productService = {
     async getProduct(id) {

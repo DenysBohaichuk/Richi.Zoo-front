@@ -21,7 +21,7 @@
 
 <script setup>
 import { onMounted } from 'vue'
-import useAuth from '~~/server/services/user/auth/google/credentials.js'
+import useAuth from '~/composables/api/services/user/auth/google/credentials.js'
 
 const emits = defineEmits(['signInStart', 'signInComplete'])
 const { user, handleCredentialResponse } = useAuth()

@@ -22,10 +22,6 @@ export default defineNuxtConfig({
         '@nuxtjs/robots'
     ],
 
-    plugins: [
-        '../server/api/client/apiClient.js' // Додаємо шлях до вашого плагіна
-    ],
-
     sitemap: {
         hostname: 'https://richizoo.com',
         gzip: true,

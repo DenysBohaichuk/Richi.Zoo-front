@@ -3,11 +3,11 @@
  *
  * Простий спосіб звернутися до будь якого методу
  */
-import {authModule} from "~~/server/services/user/auth/authModule.js";
-import {categoryService} from "~~/server/services/category/categoryService.js";
-import {productService} from "~~/server/services/product/productService.js";
-import {deliveryMethodsService} from "~~/server/services/delivery_methods/deliveryMethodsService.js";
-import {orderService} from "~~/server/services/orders/orderService.js";
+import {authModule} from "~/composables/api/services/user/auth/authModule.js";
+import {categoryService} from "~/composables/api/services/category/categoryService.js";
+import {productService} from "~/composables/api/services/product/productService.js";
+import {deliveryMethodsService} from "~/composables/api/services/delivery_methods/deliveryMethodsService.js";
+import {orderService} from "~/composables/api/services/orders/orderService.js";
 
 export const apiMethods = {
     /**
