@@ -1,6 +1,6 @@
 <template>
   <div class="page-container">
-<!--    <UISwiperMainSwiper/>-->
+<!--    <BaseSwiperMainSwiper/>-->
 
 
     <div class="categories rounded-lg">
@@ -22,20 +22,25 @@
 </template>
 
 <script setup>
-import {ref, computed, onBeforeMount} from 'vue';
+import {ref, computed, onBeforeMount, onMounted, nextTick} from 'vue';
 
 import {getDataFromStore} from "~/mixins/MixinNavbarCategories.js";
+import {setPageLayout} from "#app";
 /*definePageMeta({
   middleware: ['redirect'],
 });*/
+definePageMeta({
+  layout: 'index-layout',
+});
+
 const categories = ref([]);
 
 onBeforeMount(async () => {
   const data = await getDataFromStore();
   categories.value = data.categoriesDropdown;
 
-  setPageLayout('default');
 });
+
 
 const sectionedCategories = computed(() => {
   const sections = [];

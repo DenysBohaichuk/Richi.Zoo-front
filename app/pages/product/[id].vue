@@ -1,11 +1,16 @@
 <template>
-  <div class="bg-white">
+  <div class="bg-white w-full">
+
+    <ClientOnly>
+      <BaseBreadcrumbs :breadcrumbs="data.breadcrumbs" />
+    </ClientOnly>
+
     <main class="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8">
       <div class="mx-auto max-w-2xl lg:max-w-none">
         <!-- Product -->
         <div class="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
           <!-- Image gallery -->
-          <UISwiperProductSwiper :images="productImages"/>
+          <BaseSwiperProductSwiper :images="productImages"/>
 
           <!-- Pro5--5duct info -->
           <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
@@ -99,7 +104,7 @@
 
                 <div class="mt-10 flex">
 
-                  <UIButtonsSimpleSkyButton class="!w-full" :text="$t('product.buy_button')"
+                  <BaseButtonsSimpleSkyButton class="!w-full" :text="$t('product.buy_button')"
                                             @click.prevent="addProductToBasket();openModal() "/>
 
                   <div class="transition duration-700 ease-in-out">

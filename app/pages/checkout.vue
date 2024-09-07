@@ -9,7 +9,7 @@
             <h2 class="text-lg font-medium text-gray-900">{{ $t('checkout.contact_information') }}</h2>
             <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
               <div>
-                <UIFieldsInputField
+                <BaseFieldsInputField
                     type="text"
                     id="first-name"
                     name="first-name"
@@ -22,7 +22,7 @@
               </div>
 
               <div>
-                <UIFieldsInputField
+                <BaseFieldsInputField
                     type="text"
                     id="last-name"
                     name="last-name"
@@ -35,7 +35,7 @@
               </div>
 
               <div class="sm:col-span-2">
-                <UIFieldsInputField
+                <BaseFieldsInputField
                     id="phone"
                     type="tel"
                     label="Телефон*"
@@ -46,7 +46,7 @@
               </div>
 
               <div class="sm:col-span-2">
-                <UIFieldsInputField
+                <BaseFieldsInputField
                     type="email"
                     id="email-address"
                     name="email-address"
@@ -60,7 +60,7 @@
               <div class="sm:col-span-2">
 
                 <!-- Поле для вводу міста -->
-                <UIFieldsInputField
+                <BaseFieldsInputField
                     label="Місто*"
                     id="city"
                     name="city"
@@ -93,7 +93,7 @@
               <div class="sm:col-span-2">
 
                 <!-- Поле для вибору відділення -->
-                <UIFieldsInputField
+                <BaseFieldsInputField
                     label="Відділення*"
                     id="warehouse"
                     name="warehouse"

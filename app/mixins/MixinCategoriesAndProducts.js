@@ -5,10 +5,12 @@ export async function getDataFromStore(){
     const category = data.category
     const subcategories = data.subcategories
     const products = data.products
+    const breadcrumbs = data.breadcrumbs
 
     return {
         category,
         subcategories,
-        products
+        products,
+        breadcrumbs
     }
 }

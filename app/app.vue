@@ -13,6 +13,13 @@ if (typeof window !== 'undefined') {
   window.createFlashAlert = createFlashAlert;
   window.closeAlert = closeAlert;
 }
+import Scrollbar from 'smooth-scrollbar';
+onMounted( ()=>{
+  // Ініціалізація інерційного скролінгу для всього документа
+/*  Scrollbar.init(document.body, {
+    damping: 0.05, // Ступінь інерції
+  });*/
+})
 </script>
 <style>
 @import url("assets/css/components/alerts.css");

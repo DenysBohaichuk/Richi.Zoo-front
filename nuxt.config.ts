@@ -14,12 +14,13 @@ export default defineNuxtConfig({
 
 
     modules: [
-        '@nuxtjs/tailwindcss',
-        '@pinia/nuxt',
-        '@nuxtjs/i18n',
-        "@nuxt/image",
-        '@nuxtjs/sitemap',
-        '@nuxtjs/robots'
+      '@nuxtjs/tailwindcss',
+      '@pinia/nuxt',
+      '@nuxtjs/i18n',
+      "@nuxt/image",
+      '@nuxtjs/sitemap',
+      '@nuxtjs/robots',
+      'nuxt-aos'
     ],
 
     sitemap: {
@@ -78,4 +79,6 @@ export default defineNuxtConfig({
     },
 
     compatibilityDate: '2024-08-14'
+
+
 })

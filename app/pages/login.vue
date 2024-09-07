@@ -2,7 +2,7 @@
   <LazyBaseUserIsAuthUser>
     <div class="container">
       <div class="relative">
-        <UILoaderKakiDog v-show="formSubmitted" :round="'15px'"/>
+        <BaseLoaderKakiDog v-show="formSubmitted" :round="'15px'"/>
         <div class="w-[400px] h-max bg-white p-5 rounded-[15px]">
           <div class="mb-3 text-xl flex justify-center">Авторизація</div>
           <form ref="formLogin" @submit.prevent="onSubmit" class="flex flex-col h-full gap-5">
@@ -10,14 +10,14 @@
             <!--   Пошта    -->
             <div>
               <div class="relative">
-                <UIFieldsEmailField label="Пошта*" name="email" id="email" v-model="emailValue" :error="emailError"/>
+                <BaseFieldsEmailField label="Пошта*" name="email" id="email" v-model="emailValue" :error="emailError"/>
               </div>
             </div>
 
             <div>
               <!--Пароль-->
               <div class="relative">
-                <UIFieldsPasswordField label="Пароль*" id="password" type="password" v-model="passValue"
+                <BaseFieldsPasswordField label="Пароль*" id="password" type="password" v-model="passValue"
                                        :error="passError"/>
               </div>
             </div>
@@ -29,7 +29,7 @@
                 Вхід
               </button>
               <span>Або</span>
-              <UIButtonsGoogleSignInButton @signInStart="formSubmitted = true" @signInComplete="formSubmitted = false" class="h-8"/>
+              <BaseButtonsGoogleSignInButton @signInStart="formSubmitted = true" @signInComplete="formSubmitted = false" class="h-8"/>
             </div>
 
           </form>
@@ -46,7 +46,7 @@ import {useModalInfoStore} from "~/store/modals/info.js";
 import {ref} from 'vue';
 import {useField, useForm} from 'vee-validate';
 import * as yup from 'yup';
-import GoogleSignInButton from "~/components/UI/buttons/GoogleSignInButton.vue";
+import GoogleSignInButton from "~/components/base/buttons/GoogleSignInButton.vue";
 
 const modalInfoStore = useModalInfoStore();
 const formSubmitted = ref(false);

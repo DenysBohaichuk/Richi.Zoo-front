@@ -52,7 +52,7 @@
                       </button>
                     </div>
 
-                    <UIButtonsSimpleSkyButton class="absolute bottom-0 right-0" :text="$t('product.add_basket_button')" @click="() => addToBasket(product)"/>
+                    <BaseButtonsSimpleSkyButton class="absolute bottom-0 right-0" :text="$t('product.add_basket_button')" @click="() => addToBasket(product)"/>
                   </div>
                 </div>
 

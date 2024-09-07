@@ -14,8 +14,8 @@
     <swiper-slide>Slide 4</swiper-slide><swiper-slide>Slide 5</swiper-slide>
     <swiper-slide>Slide 6</swiper-slide><swiper-slide>Slide 7</swiper-slide>
     <swiper-slide>Slide 8</swiper-slide><swiper-slide>Slide 9</swiper-slide>
-    <div class="swiper-button-prev flex justify-center items-center"><img src="@/assets/img/Expand_left_light.png" class="swiper-left-arrow"/></div>
-    <div class="swiper-button-next flex justify-center items-center"><img src="@/assets/img/Expand_right_light.png" class="swiper-right-arrow"/></div>
+    <div class="swiper-button-prev flex justify-center items-center"><img src="../../../assets/img/Expand_left_light.png" class="swiper-left-arrow"/></div>
+    <div class="swiper-button-next flex justify-center items-center"><img src="../../../assets/img/Expand_right_light.png" class="swiper-right-arrow"/></div>
   </swiper>
 </template>
 
@@ -27,7 +27,7 @@ import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 
 import 'swiper/css/pagination';
-import '@/assets/css/swiper.css';
+import 'assets/css/swiper.css';
 
 import { Pagination, Navigation, Autoplay } from 'swiper/modules';
 

@@ -29,7 +29,7 @@ const route = useRoute();
 <template>
   <div class="container">
     <div class="relative">
-      <UILoaderKakiDog v-show="waitLoadData" :round="'15px'"/>
+      <BaseLoaderKakiDog v-show="waitLoadData" :round="'15px'"/>
       <div class="max-w-[500px] h-max bg-white p-5 rounded-[15px] text-center">
         <div class="mb-3 text-xl flex justify-center">Підтвердження аккаунта</div>
         <div>

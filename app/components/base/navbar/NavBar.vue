@@ -2,9 +2,9 @@
   <nav id="nav-bar" class="min-h-max z-10">
       <div class="h-full p-2 pl-5 logo-container">
         <div class="h-full">
-<!--          <NuxtLink to="/" class="h-full" nuxt-client>-->
+          <NuxtLink to="/" class="h-full" nuxt-client>
             <LazyBaseLogoHorizontalBlackLogo class="h-full"></LazyBaseLogoHorizontalBlackLogo>
-<!--          </NuxtLink>-->
+          </NuxtLink>
         </div>
       </div>
       <div class="flex w-full items-center nav-items">
