@@ -5,7 +5,7 @@
       <BaseBreadcrumbs :breadcrumbs="data.breadcrumbs" />
     </ClientOnly>
 
-    <main class="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8">
+    <main class="mx-auto max-w-7xl sm:px-6 pt-8 sm:pt-16 lg:px-8">
       <div class="mx-auto max-w-2xl lg:max-w-none">
         <!-- Product -->
         <div class="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">

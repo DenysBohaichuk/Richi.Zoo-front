@@ -6,7 +6,7 @@
         <BaseBreadcrumbs :breadcrumbs="data.breadcrumbs" />
       </ClientOnly>
 
-      <div v-if="data.products.length === 0" class="py-16 sm:py-24 lg:mx-auto lg:max-w-7xl lg:px-8">
+      <div v-if="data.products.length === 0" class="py-16 sm:py-24 lg:mx-auto lg:max-w-7xl lg:px-8 min-h-screen">
         <div class="flex items-center justify-between px-4 sm:px-6 lg:px-0">
           <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ data.category.name }}</h2>
         </div>
