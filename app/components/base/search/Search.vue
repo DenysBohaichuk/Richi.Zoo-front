@@ -4,7 +4,7 @@
       <Dialog as="div" class="relative z-10" @close="closeAndClear">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
                          leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
-          <div class="hidden sm:fixed sm:inset-0 sm:block sm:bg-gray-500 sm:bg-opacity-75 sm:transition-opacity"/>
+          <div class="fixed inset-0 block bg-gray-500 bg-opacity-75 transition-opacity"/>
         </TransitionChild>
 
         <div class="fixed inset-0 flex items-start justify-center z-50">
@@ -13,7 +13,7 @@
               <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 scale-105"
                                enter-to="opacity-100 scale-100" leave="ease-in duration-200"
                                leave-from="opacity-100 scale-100" leave-to="opacity-0 scale-105">
-                <DialogPanel class="w-full flex flex-col transform text-left text-base transition sm:my-8">
+                <DialogPanel class="w-full flex flex-col transform text-left text-base transition my-8">
                   <input
                       v-model="query"
                       @input="handleInput"
