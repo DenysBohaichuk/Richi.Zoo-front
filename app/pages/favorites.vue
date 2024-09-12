@@ -1,7 +1,10 @@
-
-
 <template>
-  <div class="bg-white">
+<div  class="min-h-screen">
+  <ClientOnly>
+    <BaseBreadcrumbs :breadcrumbs="[]"/>
+  </ClientOnly>
+
+  <div>
     <div class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 sm:max-w-7xl lg:px-8">
       <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{$t('favorites.header')}}</h1>
       <div class="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
@@ -25,8 +28,8 @@
                     </div>
                     <p class="mt-1 text-sm font-medium text-gray-900">{{ product.price }} грн</p>
                     <div class="mt-1 flex text-sm">
-<!--                      <p class="text-gray-500">{{ product.color }}</p>
-                      <p v-if="product.size" class="ml-4 border-l border-gray-200 pl-4 text-gray-500">{{ product.size }}</p>-->
+                      <!--                      <p class="text-gray-500">{{ product.color }}</p>
+                                            <p v-if="product.size" class="ml-4 border-l border-gray-200 pl-4 text-gray-500">{{ product.size }}</p>-->
                       <li v-for="(feature, index) in computeFeatureTypes(product)" :key="feature.id"
                           :class="{
       'ml-4 border-l border-gray-200 pl-4': index !== 0,
@@ -56,58 +59,59 @@
                   </div>
                 </div>
 
-<!--                <p class="mt-4 flex space-x-2 text-sm text-gray-700">-->
-<!--                  <CheckIcon v-if="product.inStock" class="h-5 w-5 flex-shrink-0 text-green-500" aria-hidden="true" />-->
-<!--                  <ClockIcon v-else class="h-5 w-5 flex-shrink-0 text-gray-300" aria-hidden="true" />-->
-<!--                  <span>{{ product.inStock ? 'In stock' : `Ships in ${product.leadTime}` }}</span>-->
-<!--                </p>-->
+                <!--                <p class="mt-4 flex space-x-2 text-sm text-gray-700">-->
+                <!--                  <CheckIcon v-if="product.inStock" class="h-5 w-5 flex-shrink-0 text-green-500" aria-hidden="true" />-->
+                <!--                  <ClockIcon v-else class="h-5 w-5 flex-shrink-0 text-gray-300" aria-hidden="true" />-->
+                <!--                  <span>{{ product.inStock ? 'In stock' : `Ships in ${product.leadTime}` }}</span>-->
+                <!--                </p>-->
               </div>
             </li>
           </ul>
         </section>
 
         <!-- Order summary -->
-<!--        <section aria-labelledby="summary-heading" class="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
-          <h2 id="summary-heading" class="text-lg font-medium text-gray-900">Order summary</h2>
+        <!--        <section aria-labelledby="summary-heading" class="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8">
+                  <h2 id="summary-heading" class="text-lg font-medium text-gray-900">Order summary</h2>
 
-          <dl class="mt-6 space-y-4">
-            <div class="flex items-center justify-between">
-              <dt class="text-sm text-gray-600">Subtotal</dt>
-              <dd class="text-sm font-medium text-gray-900">$99.00</dd>
-            </div>
-            <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-              <dt class="flex items-center text-sm text-gray-600">
-                <span>Shipping estimate</span>
-                <a href="#" class="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
-                  <span class="sr-only">Learn more about how shipping is calculated</span>
-                  <QuestionMarkCircleIcon class="h-5 w-5" aria-hidden="true" />
-                </a>
-              </dt>
-              <dd class="text-sm font-medium text-gray-900">$5.00</dd>
-            </div>
-            <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-              <dt class="flex text-sm text-gray-600">
-                <span>Tax estimate</span>
-                <a href="#" class="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
-                  <span class="sr-only">Learn more about how tax is calculated</span>
-                  <QuestionMarkCircleIcon class="h-5 w-5" aria-hidden="true" />
-                </a>
-              </dt>
-              <dd class="text-sm font-medium text-gray-900">$8.32</dd>
-            </div>
-            <div class="flex items-center justify-between border-t border-gray-200 pt-4">
-              <dt class="text-base font-medium text-gray-900">Order total</dt>
-              <dd class="text-base font-medium text-gray-900">$112.32</dd>
-            </div>
-          </dl>
+                  <dl class="mt-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                      <dt class="text-sm text-gray-600">Subtotal</dt>
+                      <dd class="text-sm font-medium text-gray-900">$99.00</dd>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-gray-200 pt-4">
+                      <dt class="flex items-center text-sm text-gray-600">
+                        <span>Shipping estimate</span>
+                        <a href="#" class="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
+                          <span class="sr-only">Learn more about how shipping is calculated</span>
+                          <QuestionMarkCircleIcon class="h-5 w-5" aria-hidden="true" />
+                        </a>
+                      </dt>
+                      <dd class="text-sm font-medium text-gray-900">$5.00</dd>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-gray-200 pt-4">
+                      <dt class="flex text-sm text-gray-600">
+                        <span>Tax estimate</span>
+                        <a href="#" class="ml-2 flex-shrink-0 text-gray-400 hover:text-gray-500">
+                          <span class="sr-only">Learn more about how tax is calculated</span>
+                          <QuestionMarkCircleIcon class="h-5 w-5" aria-hidden="true" />
+                        </a>
+                      </dt>
+                      <dd class="text-sm font-medium text-gray-900">$8.32</dd>
+                    </div>
+                    <div class="flex items-center justify-between border-t border-gray-200 pt-4">
+                      <dt class="text-base font-medium text-gray-900">Order total</dt>
+                      <dd class="text-base font-medium text-gray-900">$112.32</dd>
+                    </div>
+                  </dl>
 
-          <div class="mt-6">
-            <button type="submit" class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Checkout</button>
-          </div>
-        </section>-->
+                  <div class="mt-6">
+                    <button type="submit" class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Checkout</button>
+                  </div>
+                </section>-->
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script setup lang="ts">
@@ -159,6 +163,46 @@ function saveFavoritesToLocalStorage() {
   useFavoriteProductStore().setData(products)
 }
 
+const config = useAppConfig();
+const { t } = useI18n();
+
+useHead({
+  title:`${t('favorites.header')} | ${config.projectName}`,
+  meta: [
+    { name: 'robots', content: 'noindex, nofollow' },
+    { name: 'description', content: t('favorites.metaDescription') },
+    { property: 'og:title', content: removeProjectNameSeparator(`${t('favorites.header')} | ${config.projectName}`) },
+    { property: 'og:description', content: t('favorites.metaOgDescription') },
+    { property: 'og:image', content: `${config.domain}/images/favorites-og-image.jpg` } // Додайте зображення для відображення у соцмережах
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      children: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": t('favorites.header'),
+        "itemListElement": products.value.map((product, index) => ({
+          "@type": "ListItem",
+          "position": index + 1,
+          "item": {
+            "@type": "Product",
+            "name": product.name,
+            "image": product.images[0],
+            "offers": {
+              "@type": "Offer",
+              "url": `${config.domain}/product/${product.id}`,
+              "priceCurrency": "UAH",
+              "price": product.price,
+              "availability": "https://schema.org/InStock",
+              "itemCondition": "https://schema.org/NewCondition"
+            }
+          }
+        }))
+      })
+    }
+  ]
+});
 </script>
 
 

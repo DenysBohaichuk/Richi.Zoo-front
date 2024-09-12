@@ -11,6 +11,18 @@
         </div>
       </li>
 
+      <!-- Якщо breadcrumbs відсутні, вивести іконку та поточну назву сторінки -->
+      <li v-if="breadcrumbs.length === 0" class="flex">
+        <div class="flex items-center">
+          <svg class="h-full w-6 flex-shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
+            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+          </svg>
+          <span class="ml-4 text-sm font-medium text-cerulean">
+            {{ pageName }}
+          </span>
+        </div>
+      </li>
+
       <!-- Хлібні крихти -->
       <li v-for="(breadcrumb, index) in breadcrumbs" :key="index" class="flex">
         <div class="flex items-center">
@@ -27,7 +39,7 @@
           >
             {{ breadcrumb.name }}
           </NuxtLink>
-          <span v-else class="ml-4 text-sm font-medium text-сerulean font-bold">
+          <span v-else class="ml-4 text-sm font-medium text-cerulean">
             {{ breadcrumb.name }}
           </span>
         </div>
@@ -39,6 +51,7 @@
 <script setup>
 import { ref } from 'vue';
 import { HomeIcon } from '@heroicons/vue/20/solid';
+import {removeProjectNameSeparator} from "~/utils/pagesHandler.js";
 
 // Приймаємо breadcrumbs як пропс
 const props = defineProps({
@@ -50,6 +63,10 @@ const props = defineProps({
 
 // Поточний URL сторінки
 const currentUrl = ref(window.location.pathname);
+
+// Назва поточної сторінки
+const pageName = ref(removeProjectNameSeparator(document.title) || '');
+
 </script>
 
 <style scoped>

@@ -45,12 +45,20 @@
                     <Transition :name="transitionDirection" mode="out-in">
                       <template v-if="!showCategories && !selectedCategory">
                         <div>
-                          <button @click="toggleCategories" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 hover:text-сerulean  transition-colors duration-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
-                            </svg>
+                          <button @click="toggleCategories" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 hover:text-cerulean  transition-colors duration-200">
+                            <Squares2X2Icon class="w-6 h-6 icon-stroke heart-icon hover:text-red-600 transition-colors duration-200"/>
                             {{ $t('navbar.categories') }}
                           </button>
+
+                          <NuxtLink to="/favorites" @click="emitCloseEvent" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 hover:text-cerulean transition-colors duration-200">
+                            <HeartIcon class="w-6 h-6 icon-stroke heart-icon hover:text-red-600 "/>
+                            {{ $t('navbar.favorites') }}
+                          </NuxtLink>
+
+                          <NuxtLink to="/checkout" @click="emitCloseEvent" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 hover:text-cerulean transition-colors duration-200">
+                            <ShoppingBagIcon class="w-6 h-6 icon-stroke heart-icon cursor-pointer hover:text-orange-600"/>
+                            {{ $t('navbar.basket') }}
+                          </NuxtLink>
                         </div>
                       </template>
 
@@ -60,7 +68,7 @@
                           <div class="text-lg font-semibold">{{ $t('navbar.categories') }}</div>
                           <div class="space-y-4 mt-4">
                             <div v-for="category in categories" :key="category.slug" class="group">
-                              <div class="flex justify-between items-center px-4 py-2 rounded-md text-sm font-semibold leading-6 text-gray-900 group-hover:text-сerulean group-hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
+                              <div class="flex justify-between items-center px-4 py-2 rounded-md text-sm font-semibold leading-6 text-gray-900 group-hover:text-cerulean group-hover:bg-slate-100 transition-colors duration-200 cursor-pointer">
                                 <!-- Перехід на сторінку категорії -->
                                 <NuxtLink :to="`/category/${category.slug}`" @click="emitCloseEvent" class="flex-1">
                                   {{ category.name }}
@@ -80,7 +88,7 @@
                           <div class="text-lg font-semibold">{{ selectedCategory.name }}</div>
                           <div class="space-y-4 mt-4">
                             <div v-for="subcategory in selectedCategory.subcategories" :key="subcategory.slug" class="group">
-                              <NuxtLink :to="`/category/${subcategory.slug}`" @click="emitCloseEvent" class="block px-4 py-2 text-sm font-semibold leading-6 text-gray-900 hover:text-сerulean hover:bg-slate-100 transition-colors duration-200">
+                              <NuxtLink :to="`/category/${subcategory.slug}`" @click="emitCloseEvent" class="block px-4 py-2 text-sm font-semibold leading-6 text-gray-900 hover:text-cerulean hover:bg-slate-100 transition-colors duration-200">
                                 {{ subcategory.name }}
                               </NuxtLink>
                             </div>
@@ -105,6 +113,7 @@ import { XMarkIcon, ChevronRightIcon } from '@heroicons/vue/24/outline';
 import { defineProps, defineEmits, ref } from 'vue';
 import { useNavbarStore } from '~/store/components/navbar.js';
 import { getDataFromStore } from '~/mixins/MixinNavbarCategories.js';
+import {HeartIcon, ShoppingBagIcon, Squares2X2Icon} from "@heroicons/vue/24/outline/index.js";
 
 defineProps({
   open: Boolean
@@ -119,7 +128,6 @@ function emitCloseEvent() {
 
 // Завантаження категорій з магазину
 const categories = ref([]);
-await useNavbarStore().getCategoriesDropdown();
 const data = await getDataFromStore();
 categories.value = data.categoriesDropdown;
 

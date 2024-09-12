@@ -11,7 +11,7 @@ module.exports = {
             colors: {
                 deepsea: '#385773',
                 azure: '#5BA9D9',
-                сerulean: '#73BCD9',
+                cerulean: '#73BCD9',
                 umber: '#8C5B30',
                 sandstone: '#D9A882',
 

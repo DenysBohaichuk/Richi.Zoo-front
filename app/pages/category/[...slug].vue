@@ -1,24 +1,22 @@
 <template>
-  <div class="w-full">
-    <div class="bg-white">
+  <div>
+    <ClientOnly>
+      <BaseBreadcrumbs :breadcrumbs="data.breadcrumbs"/>
+    </ClientOnly>
 
-      <ClientOnly>
-        <BaseBreadcrumbs :breadcrumbs="data.breadcrumbs" />
-      </ClientOnly>
-
-      <div v-if="data.products.length === 0" class="py-16 sm:py-24 lg:mx-auto lg:max-w-7xl lg:px-8 min-h-screen">
-        <div class="flex items-center justify-between px-4 sm:px-6 lg:px-0">
-          <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ data.category.name }}</h2>
-        </div>
-        <TemplatesSubcategoryList :subcategories="data.subcategories"/>
+    <div v-if="data.products.length === 0" class="py-16 sm:py-24 lg:mx-auto lg:max-w-7xl lg:px-8 min-h-screen">
+      <div class="flex items-center justify-between px-4 sm:px-6 lg:px-0">
+        <h2 class="text-2xl font-bold tracking-tight text-gray-900">{{ data.category.name }}</h2>
       </div>
-      <div v-else class="">
-        <div class="">
-          <TemplatesProductsListView :category="data.category" :products="data.products"/>
-        </div>
+      <TemplatesSubcategoryList :subcategories="data.subcategories"/>
+    </div>
+    <div v-else class="">
+      <div class="">
+        <TemplatesProductsListView :category="data.category" :products="data.products"/>
       </div>
     </div>
   </div>
+
 </template>
 
 <script setup lang="ts">

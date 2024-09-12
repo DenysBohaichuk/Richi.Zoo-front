@@ -8,7 +8,7 @@
         <ul>
           <li v-for="category in section" :key="category.id" class="rounded-lg">
             <NuxtLink :to="`/category/${category.slug}`"
-                      class="flex justify-center text-lg py-4 text-center w-full h-full hover:bg-gray-100 hover:text-сerulean transition-colors duration-200 rounded-lg">
+                      class="flex justify-center text-lg py-4 text-center w-full h-full hover:bg-gray-100 hover:text-cerulean transition-colors duration-200 rounded-lg">
               <div v-if="!category.icon" class="h-6 w-6 flex-none"></div>
               <img v-else :src="category.icon" alt="" class="h-6 w-6 flex-none text-gray-400" aria-hidden="true"/>
               {{ category.name }}

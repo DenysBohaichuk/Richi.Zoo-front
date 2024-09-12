@@ -40,8 +40,8 @@
                       :to="`/category/${category.slug}`"
                       @mouseover="setActiveCategory(category)"
                       @click="delayedClosePanel"
-                      class="flex gap-x-4 p-2 text-sm font-semibold leading-6 text-gray-900 hover:text-сerulean hover:bg-slate-100 transition-colors duration-200"
-                      :class="{ 'bg-slate-100 text-сerulean': activeCategory === category }"
+                      class="flex gap-x-4 p-2 text-sm font-semibold leading-6 text-gray-900 hover:text-cerulean hover:bg-slate-100 transition-colors duration-200"
+                      :class="{ 'bg-slate-100 text-cerulean': activeCategory === category }"
                   >
                     <div v-if="!category.icon" class="h-6 w-6 flex-none"></div>
                     <img
@@ -69,7 +69,7 @@
                       :to="`/category/${subcategory.slug}`"
                       @mouseover="setActiveSubcategory(subcategory)"
                       @click="delayedClosePanel"
-                      class="flex gap-x-4 p-2 text-sm font-semibold leading-6 text-gray-900 hover:text-сerulean hover:bg-slate-100 transition-colors duration-200"
+                      class="flex gap-x-4 p-2 text-sm font-semibold leading-6 text-gray-900 hover:text-cerulean hover:bg-slate-100 transition-colors duration-200"
                       :class="{ 'bg-gray-100': activeSubcategory === subcategory }"
                   >
                     {{ subcategory.name }}
@@ -173,7 +173,6 @@ function cancelClosePanel() {
   if (closeTimeout) clearTimeout(closeTimeout);
 }
 
-await useNavbarStore().getCategoriesDropdown();
 
 const activeCategory = ref(null);
 const activeSubcategory = ref(null);

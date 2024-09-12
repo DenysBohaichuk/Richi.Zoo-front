@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white w-full">
+  <div >
 
     <ClientOnly>
       <BaseBreadcrumbs :breadcrumbs="data.breadcrumbs" />
