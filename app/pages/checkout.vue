@@ -231,9 +231,9 @@
 
             <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
               <button type="submit"
-                      :disabled="products.length === 0"
+                      :disabled="!products || products.length === 0"
                       class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                      :class="{'opacity-50 cursor-not-allowed': products.length === 0}">
+                      :class="{'opacity-50 cursor-not-allowed': !products || products.length === 0}">
                 {{ $t('checkout.confirm_order') }}
               </button>
             </div>
@@ -414,14 +414,16 @@ useHead({
         "@context": "https://schema.org",
         "@type": "ShoppingCart",
         "name": t('basket.header'),
-        "offers": products.value.map(product => ({
-          "@type": "Offer",
-          "url": `${config.domain}/product/${product.id}`,
-          "priceCurrency": "UAH",
-          "price": product.price,
-          "availability": "https://schema.org/InStock",
-          "itemCondition": "https://schema.org/NewCondition"
-        }))
+        "offers": (products.value && products.value.length > 0)
+            ? products.value.map(product => ({
+              "@type": "Offer",
+              "url": `${config.domain}/product/${product.id}`,
+              "priceCurrency": "UAH",
+              "price": product.price,
+              "availability": "https://schema.org/InStock",
+              "itemCondition": "https://schema.org/NewCondition"
+            }))
+            : []
       })
     }
   ]

@@ -9,7 +9,7 @@
       <h1 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">{{$t('favorites.header')}}</h1>
       <div class="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
         <section aria-labelledby="cart-heading" class="divide-y divide-gray-200 border-t border-gray-200 lg:col-span-12">
-          <div v-if="products.length === 0" class="text-center text-gray-500 py-8">
+          <div v-if="!products || products.length === 0" class="text-center text-gray-500 py-8">
             {{ $t('favorites.empty') }}
           </div>
           <ul v-else role="list">
@@ -182,23 +182,25 @@ useHead({
         "@context": "https://schema.org",
         "@type": "ItemList",
         "name": t('favorites.header'),
-        "itemListElement": products.value.map((product, index) => ({
-          "@type": "ListItem",
-          "position": index + 1,
-          "item": {
-            "@type": "Product",
-            "name": product.name,
-            "image": product.images[0],
-            "offers": {
-              "@type": "Offer",
-              "url": `${config.domain}/product/${product.id}`,
-              "priceCurrency": "UAH",
-              "price": product.price,
-              "availability": "https://schema.org/InStock",
-              "itemCondition": "https://schema.org/NewCondition"
-            }
-          }
-        }))
+        "itemListElement": (products.value && products.value.length > 0)
+            ? products.value.map((product, index) => ({
+              "@type": "ListItem",
+              "position": index + 1,
+              "item": {
+                "@type": "Product",
+                "name": product.name,
+                "image": product.images[0],
+                "offers": {
+                  "@type": "Offer",
+                  "url": `${config.domain}/product/${product.id}`,
+                  "priceCurrency": "UAH",
+                  "price": product.price,
+                  "availability": "https://schema.org/InStock",
+                  "itemCondition": "https://schema.org/NewCondition"
+                }
+              }
+            }))
+            : []
       })
     }
   ]

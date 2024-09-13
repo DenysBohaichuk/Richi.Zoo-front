@@ -35,7 +35,7 @@
           <div id="central-button-container" class="-top-3 bg-white p-2 rounded-full border border-gray-300 shadow-lg relative">
             <NuxtLink to="#"
                       id="central-button"
-                      class="flex items-center justify-center transform transition-transform duration-300 rotate-0 cursor-pointer bg-white">
+                      class="flex items-center justify-center transform transition-transform duration-300 rotate-0 cursor-pointer bg-white text-gray-500">
               <Squares2X2Icon class="w-6 h-6 icon-stroke heart-icon" />
             </NuxtLink>
 
@@ -50,9 +50,8 @@
 
 
           <!-- Третя іконка -->
-          <NuxtLink to="/checkout" class="flex flex-col items-center text-gray-500">
-            <ShoppingBagIcon class="w-6 h-6 icon-stroke heart-icon cursor-pointer hover:text-orange-600"/>
-          </NuxtLink>
+            <ShoppingBagIcon class="w-6 h-6 icon-stroke heart-icon cursor-pointer hover:text-orange-600 text-gray-500" @click="productBasketStore.openModal()"/>
+
 
         </nav>
       </div>
@@ -80,6 +79,7 @@ import {useLoading, useToggle} from '~/mixins/MixinCommon.js';
 import {useNavbarStore} from "~/store/components/navbar.js";
 import { getDataFromStore } from '~/mixins/MixinNavbarCategories.js';
 import {HeartIcon, ShoppingBagIcon, Squares2X2Icon} from "@heroicons/vue/24/outline/index.js";
+import {useProductBasketStore} from "~/store/modals/basket.js";
 
 
 // Приймаємо параметри з батьківського компонента
@@ -101,10 +101,10 @@ if(!useNavbarStore().categoriesDropdown) {
 
 const {open, toggleSlideOver} = useToggle();
 const {waitLoadPage} = useLoading();
+const productBasketStore = useProductBasketStore();
 const data = await getDataFromStore();
 const categories = ref([]);
 categories.value = data.categoriesDropdown;
-
 
 
 onMounted(() => {

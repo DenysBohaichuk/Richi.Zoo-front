@@ -46,20 +46,20 @@
                       <template v-if="!showCategories && !selectedCategory">
                         <div>
 
-                          <button @click="toggleCategories" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 hover:text-cerulean  transition-colors duration-200">
-                            <Squares2X2Icon class="w-6 h-6 icon-stroke heart-icon hover:text-green-600"/>
-                            {{ $t('navbar.categories') }}
+                          <button @click="toggleCategories" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 group">
+                            <Squares2X2Icon class="w-6 h-6 icon-stroke heart-icon group-hover:text-green-600 transition-colors duration-200"/>
+                            <span class="group-hover:text-cerulean transition-colors duration-200">{{ $t('navbar.categories') }}</span>
                           </button>
 
-                          <NuxtLink to="/favorites" @click="emitCloseEvent" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 hover:text-cerulean transition-colors duration-200">
-                            <HeartIcon class="w-6 h-6 icon-stroke heart-icon hover:text-red-600 "/>
-                            {{ $t('navbar.favorites') }}
+                          <NuxtLink to="/favorites" @click="emitCloseEvent" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 group">
+                            <HeartIcon class="w-6 h-6 icon-stroke heart-icon group-hover:text-red-600 transition-colors duration-200"/>
+                            <span class="group-hover:text-cerulean transition-colors duration-200">{{ $t('navbar.favorites') }}</span>
                           </NuxtLink>
 
-                          <NuxtLink to="/checkout" @click="emitCloseEvent" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 hover:text-cerulean transition-colors duration-200">
-                            <ShoppingBagIcon class="w-6 h-6 icon-stroke heart-icon cursor-pointer hover:text-orange-600"/>
-                            {{ $t('navbar.basket') }}
-                          </NuxtLink>
+                          <div @click="handleSidebarCloseAndOpenBasketModal" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 group">
+                            <ShoppingBagIcon class="w-6 h-6 icon-stroke heart-icon cursor-pointer group-hover:text-orange-600 transition-colors duration-200"/>
+                           <span class="group-hover:text-cerulean transition-colors duration-200">{{ $t('navbar.basket') }}</span>
+                          </div>
                         </div>
                       </template>
 
@@ -114,16 +114,22 @@ import { XMarkIcon, ChevronRightIcon } from '@heroicons/vue/24/outline';
 import { defineProps, defineEmits, ref } from 'vue';
 import { getDataFromStore } from '~/mixins/MixinNavbarCategories.js';
 import {HeartIcon, ShoppingBagIcon, Squares2X2Icon} from "@heroicons/vue/24/outline/index.js";
+import {useProductBasketStore} from "~/store/modals/basket.js";
 
 defineProps({
   open: Boolean
 });
 
-
+const productBasketStore = useProductBasketStore();
 const emit = defineEmits(['toggleSlideOver']);
 
 function emitCloseEvent() {
   emit('toggleSlideOver');
+}
+
+function  handleSidebarCloseAndOpenBasketModal(){
+  emitCloseEvent();
+  productBasketStore.openModal()
 }
 
 // Завантаження категорій з магазину
