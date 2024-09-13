@@ -45,8 +45,9 @@
                     <Transition :name="transitionDirection" mode="out-in">
                       <template v-if="!showCategories && !selectedCategory">
                         <div>
+
                           <button @click="toggleCategories" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 hover:text-cerulean  transition-colors duration-200">
-                            <Squares2X2Icon class="w-6 h-6 icon-stroke heart-icon hover:text-red-600 transition-colors duration-200"/>
+                            <Squares2X2Icon class="w-6 h-6 icon-stroke heart-icon hover:text-green-600"/>
                             {{ $t('navbar.categories') }}
                           </button>
 
@@ -111,7 +112,6 @@
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 import { XMarkIcon, ChevronRightIcon } from '@heroicons/vue/24/outline';
 import { defineProps, defineEmits, ref } from 'vue';
-import { useNavbarStore } from '~/store/components/navbar.js';
 import { getDataFromStore } from '~/mixins/MixinNavbarCategories.js';
 import {HeartIcon, ShoppingBagIcon, Squares2X2Icon} from "@heroicons/vue/24/outline/index.js";
 
