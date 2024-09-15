@@ -1,7 +1,7 @@
 <template>
   <ClientOnly>
     <TransitionRoot as="template" :show="open">
-      <Dialog as="div" class="relative z-10" @close="productBasketStore.closeModal()">
+      <Dialog as="div" class="relative z-10" @close="productBasketStore.toggleModal()">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
                          leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
           <div class="fixed inset-0 block bg-gray-500 bg-opacity-75 transition-opacity"/>
@@ -18,7 +18,7 @@
                   <div class="flex items-center justify-between px-4 sm:px-6 lg:px-8">
                     <h2 class="text-lg font-medium text-gray-900">{{ $t('basket.header') }}</h2>
                     <button type="button" class="text-gray-400 hover:text-gray-500"
-                            @click="productBasketStore.closeModal()">
+                            @click="productBasketStore.toggleModal()">
                       <XMarkIcon class="h-6 w-6" aria-hidden="true"/>
                     </button>
                   </div>
@@ -35,7 +35,7 @@
                             <div class="min-w-0 flex-1">
                               <h4 class="text-sm">
                                 <NuxtLink :to="`/product/${product.id}`"
-                                          @click="productBasketStore.closeModal()"
+                                          @click="productBasketStore.toggleModal()"
                                           class="font-medium text-gray-700 hover:text-gray-800">{{ product.name }}</NuxtLink>
                               </h4>
                               <ul class="mt-2 flex space-x-8">
@@ -111,7 +111,7 @@ import { useProductsBasket } from "~/composables/products/basketHandler.js";
 import {TrashIcon} from "@heroicons/vue/20/solid/index.js";
 
 const productBasketStore = useProductBasketStore();
-const open = computed(() => productBasketStore.open);
+const open = computed(() => productBasketStore.isOpen);
 const products = computed(() => productBasketStore.productBasket);
 
 function removeFromBasket(product){

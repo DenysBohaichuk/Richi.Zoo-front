@@ -36,9 +36,9 @@
                       </div>
                     </li>
                   </ul>
-                  <div v-else
+                  <div v-else-if="searchPerformed"
                        class="absolute top-full left-0 right-0 bg-white shadow-lg rounded-xl mt-1 z-10 overflow-auto max-h-80">
-                    <p class="px-4 py-2">Нажаль ми нічого не знайшли :(</p>
+                    <p class="px-4 py-2">{{ $t('component.search_not_found') }}</p>
                   </div>
                 </DialogPanel>
               </TransitionChild>
@@ -58,17 +58,19 @@ import {useSearchComponentStore} from "~/store/components/search.js";
 import {apiMethods} from "~/composables/api/methods/apiMethods.js";
 
 const searchComponent = useSearchComponentStore()
-const open = computed(() => searchComponent.open);
+const open = computed(() => searchComponent.isOpen);
 const router = useRouter();
 
 const query = ref('')
 const results = ref([])
+const searchPerformed = ref(false);
 let searchTimeout = null;
 
 const closeAndClear = () => {
   searchComponent.closeComponent();
   query.value = '';
   results.value = [];
+  searchPerformed.value = false;
 }
 
 const handleInput = () => {
@@ -77,6 +79,7 @@ const handleInput = () => {
 }
 
 const onSearch = async () => {
+  searchPerformed.value = true;
   if (query.value) {
     const response = await apiMethods.getProductsBySearch(query.value)
     results.value = response.data; // Якщо дані вже у форматі JSON

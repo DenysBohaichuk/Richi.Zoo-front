@@ -117,7 +117,10 @@ import {HeartIcon, ShoppingBagIcon, Squares2X2Icon} from "@heroicons/vue/24/outl
 import {useProductBasketStore} from "~/store/modals/basket.js";
 
 defineProps({
-  open: Boolean
+  open: {
+    type: Boolean,
+    default: false,
+  }
 });
 
 const productBasketStore = useProductBasketStore();
@@ -129,7 +132,7 @@ function emitCloseEvent() {
 
 function  handleSidebarCloseAndOpenBasketModal(){
   emitCloseEvent();
-  productBasketStore.openModal()
+  productBasketStore.toggleModal()
 }
 
 // Завантаження категорій з магазину

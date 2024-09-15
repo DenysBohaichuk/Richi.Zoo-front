@@ -22,7 +22,7 @@
           </NuxtLink>
 
           <!-- Іконка кошика -->
-          <ShoppingBagIcon class="w-6 h-6 icon-stroke heart-icon cursor-pointer hover:text-orange-600 transition-colors duration-200" @click="productBasketStore.openModal()"/>
+          <ShoppingBagIcon class="w-6 h-6 icon-stroke heart-icon cursor-pointer hover:text-orange-600 transition-colors duration-200" @click="productBasketStore.toggleModal()"/>
 <!--          <ShoppingBagIcon class="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500" aria-hidden="true" />
           <span class="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">0</span>-->
         </div>

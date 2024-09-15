@@ -3,14 +3,14 @@ import { defineStore } from 'pinia';
 
 export const useSearchComponentStore = defineStore('component.search', {
     state: () => ({
-        open: false,
+        isOpen: false,
     }),
     actions: {
         openComponent() {
-            this.open = true;
+            this.isOpen = true;
         },
         closeComponent() {
-            this.open = false;
+            this.isOpen = false;
         },
     }
 });
