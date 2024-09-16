@@ -22,12 +22,11 @@ body{
 
 /*Блок контента*/
 .content{
-    margin: 4rem 1rem 0;
-    padding-top: 2rem;
+    padding: 6rem 1rem 0;
 }
 @media (min-width: 640px) {
     .content{
-        margin: 4rem 2rem 0;
+        padding: 6rem 2rem 0;
     }
 
 }

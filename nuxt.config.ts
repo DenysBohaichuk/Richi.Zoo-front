@@ -1,14 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     app: {
-        pageTransition: {name: 'page', mode: 'out-in'}
+        // pageTransition: {name: 'page', mode: 'out-in'},
     },
 
     runtimeConfig: {
         public: {
             GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
             appURL: process.env.APP_URL,
-            apiURL: process.env.API_URL
+            apiURL: process.env.API_URL,
+            imageApi: 'https://movies-proxy.vercel.app'
         },
     },
 
@@ -71,7 +72,8 @@ export default defineNuxtConfig({
     ],
 
     experimental: {
-        componentIslands: true
+        componentIslands: true,
+        viewTransition: true
     },
 
     future: {

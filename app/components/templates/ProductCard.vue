@@ -1,8 +1,9 @@
 <template>
-  <NuxtLink :to="`/product/${product.id}`" class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white">
+  <NuxtLink :to="`/product/${product.id}`" @click.native="active = product.id"
+            class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white">
     <div class="relative aspect-h-4 aspect-w-3 bg-white sm:aspect-none group-hover:opacity-75 h-64">
-      <NuxtImg :src="product.images[0]" alt="Image"
-               class="h-full w-full object-cover object-center sm:h-full sm:w-full "/>
+      <NuxtImg :src="product.images[0]" alt="Image" :class="{ active: active === product.id }"
+               class="h-full w-full object-cover object-center sm:h-full sm:w-full"/>
       <div class="absolute inset-x-0 top-0 image-shadow flex h-full items-end justify-end overflow-hidden ">
         <div aria-hidden="true" class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-30"/>
       </div>
@@ -21,13 +22,12 @@
           {{ product.barcode ? $t('product.art') + ':\u00A0' + product.barcode : '\u00A0' }}
       </span>
       <h3 class="text-center text-sm font-medium text-gray-900">
-        <a href="#">
-          {{ product.name }}
-        </a>
-        <p class="text-center mt-1 text-base font-medium text-gray-900">{{ product.price }} грн</p>
+        <p class="product-name">{{ product.name }}</p>
+        <p class="product-price">{{ product.price }} грн</p>
       </h3>
       <div class="flex">
-        <BaseButtonsSimpleSkyButton class="!w-full" :text="$t('product.buy_button')" @click.prevent="addProductToBasket();openModal() "/>
+        <BaseButtonsSimpleSkyButton class="!w-full" :text="$t('product.buy_button')"
+                                    @click.prevent="addProductToBasket();productBasketStore.toggleModal()"/>
       </div>
     </div>
   </NuxtLink>
@@ -59,9 +59,9 @@ onMounted(() => {
 
 
 const {addProductToBasket} = useProductsBasket(props.product);
-const { openModal } = useProductBasketStore();
+const productBasketStore = useProductBasketStore();
 
-
+const active = useState();
 </script>
 
 <style scoped>
@@ -80,5 +80,7 @@ const { openModal } = useProductBasketStore();
   opacity: 1;
 }
 
-
+img.active {
+  view-transition-name: selected-product-img;
+}
 </style>

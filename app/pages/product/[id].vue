@@ -12,13 +12,13 @@
           <!-- Image gallery -->
           <BaseSwiperProductSwiper :images="productImages"/>
 
-          <!-- Pro5--5duct info -->
+         <!-- Product info -->
           <div class="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-            <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ product.name }}</h1>
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900 product-name">{{ product.name }}</h1>
 
             <div class="mt-3">
               <h2 class="sr-only">Product information</h2>
-              <p class="text-3xl tracking-tight text-gray-900">{{ product.price }} грн</p>
+              <p class="text-3xl tracking-tight text-gray-900 product-price">{{ product.price }} грн</p>
             </div>
 
             <!-- Reviews -->
@@ -105,7 +105,7 @@
                 <div class="mt-10 flex">
 
                   <BaseButtonsSimpleSkyButton class="!w-full" :text="$t('product.buy_button')"
-                                            @click.prevent="addProductToBasket();openModal() "/>
+                                            @click.prevent="addProductToBasket();productBasketStore.toggleModal()"/>
 
                   <div class="transition duration-700 ease-in-out">
                     <button @click.prevent="toggleFavoriteProduct" class="p-2">
@@ -384,7 +384,7 @@ const productTypes = ref(null);
 const productImages = ref([]);
 const {reactiveFavoriteProduct, toggleFavoriteProduct, loadFavoriteItems} = useFavoriteProducts(data.product);
 const {addProductToBasket} = useProductsBasket(data.product);
-const {openModal} = useProductBasketStore();
+const productBasketStore = useProductBasketStore();
 
 product.value = data.product;
 product.value.quantity = 1;

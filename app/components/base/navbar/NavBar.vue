@@ -3,7 +3,7 @@
       <div class="h-full p-2 pl-5 logo-container">
         <div class="h-full">
           <NuxtLink to="/" class="h-full" nuxt-client>
-            <LazyBaseLogoHorizontalBlackLogo class="h-full"></LazyBaseLogoHorizontalBlackLogo>
+            <LazyBaseLogoHBL3 class="h-full"></LazyBaseLogoHBL3>
           </NuxtLink>
         </div>
       </div>

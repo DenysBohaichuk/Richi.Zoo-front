@@ -1,10 +1,7 @@
 <template>
-  <div>
-<!-- v3.12   <NuxtRouteAnnouncer />-->
     <NuxtLayout>
       <NuxtPage/>
     </NuxtLayout>
-  </div>
 </template>
 <script setup lang="ts">
 import { createFlashAlert, closeAlert } from '~/utils/alerts.js';
@@ -19,7 +16,9 @@ onMounted( ()=>{
 /*  Scrollbar.init(document.body, {
     damping: 0.05, // Ступінь інерції
   });*/
+
 })
+
 </script>
 <style>
 @import url("assets/css/components/alerts.css");
@@ -27,7 +26,7 @@ onMounted( ()=>{
 
 .page-enter-active,
 .page-leave-active {
-  transition: all 0.1s;
+  transition: all 0.3s;
 }
 .page-enter-from,
 .page-leave-to {

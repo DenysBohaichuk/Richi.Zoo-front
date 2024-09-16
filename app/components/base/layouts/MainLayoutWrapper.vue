@@ -7,8 +7,6 @@
       <BaseNavbarNavBar class="border-b border-r border-gray-200 text-lg leading-none"
                         @toggleSlideOver="sidebarStore.toggleSlideOver"/>
 
-      <!-- Плавний перехід між різними класами -->
-      <transition name="layout-transition" mode="out-in">
         <div :class="containerClass">
           <div>
             <BaseModalsInfoModal/>
@@ -20,7 +18,6 @@
             <slot name="main-content"/>
           </div>
         </div>
-      </transition>
 
       <!-- Затемнення (спочатку приховане та зміщене вниз) -->
       <div id="overlay" class="fixed inset-0 bg-gradient-to-t from-gray-300 to-transparent bg-opacity-75 transition-all duration-500 transform translate-y-full opacity-0 z-30"></div>
@@ -32,16 +29,7 @@
     </div>
     <BaseSidebarSideBar :open="sidebarStore.isOpen" @toggleSlideOver="sidebarStore.toggleSlideOver"/>
 
-    <footer class="bg-gray-100 border-t border-gray-200 py-6">
-      <div class="max-w-7xl mx-auto text-center">
-        <p class="text-gray-600 text-sm">© 2024 Your Company. All rights reserved.</p>
-        <nav class="mt-4 space-x-4">
-          <a href="#" class="text-gray-500 hover:text-gray-700 text-sm">Privacy Policy</a>
-          <a href="#" class="text-gray-500 hover:text-gray-700 text-sm">Terms of Service</a>
-          <a href="#" class="text-gray-500 hover:text-gray-700 text-sm">Contact Us</a>
-        </nav>
-      </div>
-    </footer>
+<!--    <BaseFooter/>-->
 
   </div>
 </template>
@@ -94,16 +82,6 @@ watch(() => productBasketStore.isOpen, () => {
 </script>
 
 <style scoped>
-/* Плавна зміна між макетами */
-.layout-transition-enter-active, .layout-transition-leave-active {
-  transition: all 0.5s ease;
-}
-
-.layout-transition-enter, .layout-transition-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
 
 .menu-transition-enter-active, .menu-transition-leave-active {
   transition: all 0.5s ease;

@@ -26,7 +26,7 @@
                   <div class="px-4 sm:px-6">
                     <div class="flex items-start justify-between">
                       <DialogTitle class="text-base font-semibold leading-6 text-gray-900 h-10">
-                        <LazyBaseLogoHorizontalBlackLogo class="h-full"/>
+                        <LazyBaseLogoHBL3 class="h-full"/>
                       </DialogTitle>
                       <div class="ml-3 flex h-7 items-center">
                         <button type="button"

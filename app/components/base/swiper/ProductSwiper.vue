@@ -12,7 +12,7 @@
           :key="index"
           class="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
       >
-        <img class="h-full w-full object-cover object-center" :src="image" />
+        <NuxtImg class="h-full w-full object-cover object-center swiper-img-main" :src="image" />
       </swiper-slide>
     </swiper>
     <swiper
@@ -31,7 +31,7 @@
           :key="index"
           class="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
       >
-        <img class="h-full w-full object-cover object-center" :src="image" />
+        <img class="h-full w-full object-cover object-center" :src="image"  alt=""/>
         <span
             :class="[activeIndex === index ? 'ring-indigo-500' : 'ring-transparent', 'pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2']"
             aria-hidden="true"
@@ -76,6 +76,10 @@ const modules = [FreeMode, Thumbs, Controller];
 
 
 <style scoped>
+.swiper-img-main {
+  view-transition-name: selected-product-img;
+}
+
 .swiper {
   width: 100%;
   height: 100%;
