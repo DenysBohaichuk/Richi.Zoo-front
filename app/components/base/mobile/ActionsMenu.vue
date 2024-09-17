@@ -2,14 +2,13 @@
   <!--мобільне меню-->
   <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 shadow-lg block md:hidden">
     <nav class="flex justify-around items-center py-2 relative">
-
       <!-- Перша іконка -->
       <NuxtLink to="/favorites" class="flex flex-col items-center text-gray-500">
         <HeartIcon class="w-6 h-6 icon-stroke heart-icon hover:text-red-600 transition-colors duration-200"/>
       </NuxtLink>
 
       <!-- Центральна іконка (з поворотом при натисканні) -->
-      <div id="central-button-container" class="-top-3 bg-white p-2 rounded-full border border-gray-300 shadow-lg relative">
+      <div id="central-button-container" class="bg-white p-2 rounded-full border border-gray-300 shadow-lg relative">
         <NuxtLink to="#"
                   id="central-button"
                   class="flex items-center justify-center transform transition-transform duration-700 rotate-0 cursor-pointer bg-white text-gray-500">
@@ -25,11 +24,8 @@
         </div>
       </div>
 
-
       <!-- Третя іконка -->
       <ShoppingBagIcon class="w-6 h-6 icon-stroke heart-icon cursor-pointer hover:text-orange-600 text-gray-500" @click="productBasketStore.toggleModal()"/>
-
-
     </nav>
   </div>
 </template>
@@ -126,32 +122,32 @@ const menuVisibilityStore = useMobileMenuStore();
 
 /* Динамічні позиції для кожної категорії */
 .expand .animal-koty {
-  transform: translate(-103px, -60px) scale(1);
+  transform: translate(-103px, -75px) scale(1);
   transition-delay: 0s;
 }
 
 .expand .animal-sobaky {
-  transform: translate(-82px, -100px) scale(1);
+  transform: translate(-82px, -115px) scale(1);
   transition-delay: 0.1s;
 }
 
 .expand .animal-gryzuny {
-  transform: translate(-44px, -130px) scale(1);
+  transform: translate(-44px, -145px) scale(1);
   transition-delay: 0.2s;
 }
 
 .expand .animal-ptakhy {
-  transform: translate(3px, -130px) scale(1);
+  transform: translate(3px, -145px) scale(1);
   transition-delay: 0.3s;
 }
 
 .expand .animal-ryby {
-  transform: translate(41px, -100px) scale(1);
+  transform: translate(41px, -115px) scale(1);
   transition-delay: 0.4s;
 }
 
 .expand .animal-reptylii {
-  transform: translate(62px, -60px) scale(1);
+  transform: translate(62px, -75px) scale(1);
   transition-delay: 0.5s;
 }
 

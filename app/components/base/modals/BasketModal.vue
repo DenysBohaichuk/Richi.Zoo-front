@@ -87,7 +87,7 @@
                   </section>
 
                   <div v-if="products && products.length !== 0" class="mt-8 flex justify-end px-4 sm:px-6 lg:px-8">
-                    <NuxtLink @click="useProductBasketStore().closeModal()" to="/checkout"
+                    <NuxtLink @click="useProductBasketStore().toggleModal()" to="/checkout"
                             class="rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
                       {{ $t('basket.continue_payment') }}
                     </NuxtLink>
