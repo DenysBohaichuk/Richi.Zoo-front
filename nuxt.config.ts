@@ -9,7 +9,6 @@ export default defineNuxtConfig({
             GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
             appURL: process.env.APP_URL,
             apiURL: process.env.API_URL,
-            imageApi: 'https://movies-proxy.vercel.app'
         },
     },
 

@@ -5,7 +5,7 @@
       <li class="flex">
         <div class="flex items-center">
           <NuxtLink to="/" class="text-gray-400 hover:text-gray-500">
-            <HomeIcon class="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+            <HomeIcon class="h-5 w-5 flex-shrink-0" aria-hidden="true"/>
             <span class="sr-only">Home</span>
           </NuxtLink>
         </div>
@@ -14,8 +14,9 @@
       <!-- Якщо breadcrumbs відсутні, вивести іконку та поточну назву сторінки -->
       <li v-if="!breadcrumbs || breadcrumbs.length === 0" class="flex">
         <div class="flex items-center">
-          <svg class="h-full w-6 flex-shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
-            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+          <svg class="h-full w-6 flex-shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none"
+               fill="currentColor" aria-hidden="true">
+            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z"/>
           </svg>
           <span class="ml-4 text-sm font-medium text-cerulean">
             {{ pageName }}
@@ -27,8 +28,9 @@
       <li v-for="(breadcrumb, index) in breadcrumbs" :key="index" class="flex">
         <div class="flex items-center">
           <!-- Стрілка між крихтами -->
-          <svg class="h-full w-6 flex-shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none" fill="currentColor" aria-hidden="true">
-            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+          <svg class="h-full w-6 flex-shrink-0 text-gray-200" viewBox="0 0 24 44" preserveAspectRatio="none"
+               fill="currentColor" aria-hidden="true">
+            <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z"/>
           </svg>
 
           <!-- Посилання для кожної крихти -->
@@ -49,15 +51,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { HomeIcon } from '@heroicons/vue/20/solid';
+import {ref} from 'vue';
+import {HomeIcon} from '@heroicons/vue/20/solid';
 import {removeProjectNameSeparator} from "~/utils/pagesHandler.js";
+import {timeout} from "ioredis/built/utils";
 
 // Приймаємо breadcrumbs як пропс
 const props = defineProps({
   breadcrumbs: {
     type: Array,
-    required: true
+    required: true,
+    default: []
   }
 });
 
@@ -65,7 +69,10 @@ const props = defineProps({
 const currentUrl = ref(window.location.pathname);
 
 // Назва поточної сторінки
-const pageName = ref(removeProjectNameSeparator(document.title) || '');
+const pageName = ref('');
+timeout(() => {
+  pageName.value = removeProjectNameSeparator(document.title) || '';
+}, 40)
 
 </script>
 

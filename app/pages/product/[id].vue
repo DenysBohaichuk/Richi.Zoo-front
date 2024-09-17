@@ -392,7 +392,6 @@ productFeatures.value = product.value.product_features;
 productTypes.value = data.productTypes;
 productImages.value = product.value.images
 
-
 // Форматування даних для зручного відображення
 const featureTypes = computed(() => {
   const types = {};
