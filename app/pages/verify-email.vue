@@ -1,3 +1,4 @@
+<!--
 <script setup lang="ts">
 definePageMeta({
   middleware: ["verify-email-redirect"]
@@ -54,4 +55,4 @@ const route = useRoute();
 
 <style scoped>
 
-</style>
+</style>-->
