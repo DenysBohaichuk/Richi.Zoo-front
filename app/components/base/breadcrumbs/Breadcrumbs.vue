@@ -24,6 +24,8 @@
         </div>
       </li>
 
+
+
       <!-- Хлібні крихти -->
       <li v-for="(breadcrumb, index) in breadcrumbs" :key="index" class="flex">
         <div class="flex items-center">
