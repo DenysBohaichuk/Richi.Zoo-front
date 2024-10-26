@@ -1,5 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+    ssr: true,
+
     app: {
         // pageTransition: {name: 'page', mode: 'out-in'},
     },
@@ -18,27 +20,14 @@ export default defineNuxtConfig({
       '@pinia/nuxt',
       '@nuxtjs/i18n',
       "@nuxt/image",
-      '@nuxtjs/sitemap',
       '@nuxtjs/robots',
       'nuxt-aos'
     ],
 
-    sitemap: {
-        hostname: 'https://richizoo.com',
-        gzip: true,
-        routes: async () => {
-            // Генерація маршрутів для вашого sitemap
-            return [
-                '/',
-                '/about',
-                '/products',
-            ];
-        }
-    },
     robots: {
         UserAgent: '*',
         Allow: '/',
-        Sitemap: 'https://ваш-сайт.com/sitemap.xml'
+        Sitemap: process.env.ADMIN_URL + '/sitemap.xml'
     },
 
     i18n: {
