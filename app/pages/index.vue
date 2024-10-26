@@ -33,6 +33,9 @@ definePageMeta({
   layout: 'index-layout',
 });
 
+const config = useAppConfig();
+
+
 const categories = ref([]);
 
 onBeforeMount(async () => {
@@ -53,6 +56,17 @@ const sectionedCategories = computed(() => {
   return sections;
 });
 
+
+useHead({
+  title: `${config.projectName}`,
+  meta: [
+    { name: 'robots', content: 'index, follow' },
+    { name: 'description', content: 'Зоомагазин Richi.zoo – усе необхідне для ваших улюбленців. Корми, аксесуари, іграшки та товари для догляду в Житомирі.' },
+    { property: 'og:title', content: config.projectName },
+    { property: 'og:description', content: 'Відвідайте Richi.zoo для кращих товарів для ваших улюбленців. Все для здорового і щасливого життя вашої тварини.' },
+    // { property: 'og:image', content: `${config.domain}/images/zooshop.jpg` },
+  ],
+})
 </script>
 
 

@@ -20,15 +20,10 @@ export default defineNuxtConfig({
       '@pinia/nuxt',
       '@nuxtjs/i18n',
       "@nuxt/image",
-      '@nuxtjs/robots',
       'nuxt-aos'
     ],
 
-    robots: {
-        UserAgent: '*',
-        Allow: '/',
-        Sitemap: process.env.ADMIN_URL + '/sitemap.xml'
-    },
+
 
     i18n: {
         locales: [
