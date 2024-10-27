@@ -305,7 +305,8 @@ import {
 import {getDataFromStore} from "~/mixins/MixinProduct.js";
 import {useProductBasketStore} from "~/store/modals/basket.js";
 
-const config = useAppConfig();
+const appConfig = useAppConfig();
+const runtimeConfig = useRuntimeConfig();
 
 const open = ref(false)
 
@@ -464,11 +465,11 @@ onMounted(() => {
 });
 
 useHead({
-  title: `${product.value.name} | ${config.projectName}`,
+  title: `${product.value.name} | ${appConfig.projectName}`,
   meta: [
     { name: 'robots', content: 'index, follow' },
     { name: 'description', content: product.value.plainDescription  },
-    { property: 'og:title', content: `${product.value.name} | ${config.projectName}` },
+    { property: 'og:title', content: `${product.value.name} | ${appConfig.projectName}` },
     { property: 'og:description', content: product.value.plainDescription },
     { property: 'og:image', content: product.value.images[0] }
   ],
@@ -484,7 +485,7 @@ useHead({
         "sku": product.value.barcode,
         "offers": {
           "@type": "Offer",
-          "url": config.domain + '/product/' + product.value.id,
+          "url": runtimeConfig.public.appURL + '/product/' + product.value.id,
           "priceCurrency": "UAH",
           "price": product.value.price,
           "availability": "https://schema.org/InStock",

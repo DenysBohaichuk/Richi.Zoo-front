@@ -1,7 +1,6 @@
 <template>
   <div>
     <BaseLoaderPageLoadKakiDog v-show="waitLoadPage" :opacity="'100'" :bgColor="'white'"/>
-    <NuxtLoadingIndicator/>
 
     <div>
       <BaseNavbarNavBar class="border-b border-r border-gray-200 text-lg leading-none"
