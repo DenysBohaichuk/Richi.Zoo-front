@@ -95,12 +95,13 @@ function copyBarcodeToClipboard() {
 
 <style scoped>
 .card {
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .card:hover {
   border-color: #5BA9D9;
   box-shadow: 0 0 4px 1px #cdf4fa;
+  transform: scale(1.05);
 }
 
 /* Задайте стилі для "enter" і "leave" анімацій */
