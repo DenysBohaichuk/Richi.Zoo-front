@@ -9,24 +9,25 @@
 <!--      </div>-->
     </div>
 
-    <div class="flex justify-between flex-col gap-3 p-2 pt-0">
-      <div class="text-gray-700 text-sm font-medium p-1 mb-2 overflow-hidden text-ellipsis">
+    <div class="flex flex-col justify-between gap-3 p-2 pt-0 flex-grow">
+      <div class="text-gray-700 text-sm font-medium overflow-hidden text-ellipsis" >
         {{ product.name }}
       </div>
-      <div class="flex justify-between items-center w-full">
-       <span class="text-gray-800 font-bold p-1">
+
+      <!-- Ціна та артикул вирівняні по одному рівню -->
+
+<div class=" mt-auto">
+  <div class="flex justify-between items-center mt-auto">
+        <span class="text-gray-800 font-bold p-1">
           {{ product.price }} грн
         </span>
 
-
-        <span class="text-gray-500 p-1 text-xs max-w-[120px] truncate cursor-pointer"
-              @click.prevent="copyBarcodeToClipboard"
-              title="Натисніть, щоб скопіювати">
-  {{ product.barcode ? $t('product.art') + ': ' + product.barcode : '' }}
+    <span class="text-gray-500 p-1 text-xs md:max-w-[100px] xl:max-w-[120px] truncate cursor-pointer"
+          @click.prevent="copyBarcodeToClipboard(product.barcode)"
+          title="Натисніть, щоб скопіювати">
+          {{ product.barcode ? $t('product.art') + ': ' + product.barcode : '' }}
         </span>
-
-      </div>
-
+  </div>
       <div class="flex items-center w-full gap-2">
         <BaseButtonsSimpleSkyButton :text="$t('product.buy_button')"
                                     @click.prevent="addProductToBasket();productBasketStore.toggleModal()"
@@ -38,9 +39,9 @@
             <HeartSolidIcon v-else key="solid" class="w-6 h-6 text-red-500"/>
           </transition>
         </button>
-
       </div>
 
+</div>
 
     </div>
 
