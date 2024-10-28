@@ -1,35 +1,49 @@
 <template>
   <NuxtLink :to="`/product/${product.id}`" @click.native="active = product.id"
-            class="group relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white">
-    <div class="relative aspect-h-4 aspect-w-3 bg-white sm:aspect-none group-hover:opacity-75 h-64">
+            class="card relative flex flex-col overflow-hidden rounded-lg border border-gray-200 bg-white">
+    <div class="relative aspect-h-4 aspect-w-3 bg-white sm:aspect-none  h-64">
       <NuxtImg :src="product.images[0]" alt="Image" :class="{ active: active === product.id }"
                class="h-full w-full object-cover object-center sm:h-full sm:w-full"/>
-      <div class="absolute inset-x-0 top-0 image-shadow flex h-full items-end justify-end overflow-hidden ">
-        <div aria-hidden="true" class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-30"/>
+<!--      <div class="absolute inset-x-0 top-0 image-shadow flex h-full items-end justify-end overflow-hidden ">-->
+<!--        <div aria-hidden="true" class="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-30"/>-->
+<!--      </div>-->
+    </div>
+
+    <div class="flex justify-between flex-col gap-3 p-2 pt-0">
+      <div class="text-gray-700 text-sm font-medium p-1 mb-2 overflow-hidden text-ellipsis">
+        {{ product.name }}
       </div>
-      <div
-          class="absolute bottom-0 right-0 m-1 bg-slate-200/70 rounded-full hover:scale-125 transition duration-700 ease-in-out">
-        <button @click.prevent="toggleFavoriteProduct" class="p-2">
+      <div class="flex justify-between items-center w-full">
+       <span class="text-gray-800 font-bold p-1">
+          {{ product.price }} грн
+        </span>
+
+
+        <span class="text-gray-500 p-1 text-xs max-w-[120px] truncate cursor-pointer"
+              @click.prevent="copyBarcodeToClipboard"
+              title="Натисніть, щоб скопіювати">
+  {{ product.barcode ? $t('product.art') + ': ' + product.barcode : '' }}
+        </span>
+
+      </div>
+
+      <div class="flex items-center w-full gap-2">
+        <BaseButtonsSimpleSkyButton :text="$t('product.buy_button')"
+                                    @click.prevent="addProductToBasket();productBasketStore.toggleModal()"
+                                    class="text-sm flex-grow hover:bg-cerulean"/>
+
+        <button @click.prevent="toggleFavoriteProduct" class="p-2 hover:scale-125 transition duration-300 ease-in-out">
           <transition name="fade" mode="out-in" class="relative w-6 h-6">
-            <HeartOutlineIcon v-if="!reactiveFavoriteProduct" key="outline" class="w-6 h-6 text-red-500 absolute "/>
-            <HeartSolidIcon v-else key="solid" class="w-6 h-6 text-red-500 absolute"/>
+            <HeartOutlineIcon v-if="!reactiveFavoriteProduct" key="outline" class="w-6 h-6 text-red-500"/>
+            <HeartSolidIcon v-else key="solid" class="w-6 h-6 text-red-500"/>
           </transition>
         </button>
+
       </div>
+
+
     </div>
-    <div class="flex justify-between flex-col gap-3 p-2 pt-0">
-      <span class="flex justify-end text-xs text-gray-600">
-          {{ product.barcode ? $t('product.art') + ':\u00A0' + product.barcode : '\u00A0' }}
-      </span>
-      <h3 class="text-center text-sm font-medium text-gray-900">
-        <p class="product-name">{{ product.name }}</p>
-        <p class="product-price">{{ product.price }} грн</p>
-      </h3>
-      <div class="flex">
-        <BaseButtonsSimpleSkyButton class="!w-full" :text="$t('product.buy_button')"
-                                    @click.prevent="addProductToBasket();productBasketStore.toggleModal()"/>
-      </div>
-    </div>
+
   </NuxtLink>
 </template>
 
@@ -62,9 +76,32 @@ const {addProductToBasket} = useProductsBasket(props.product);
 const productBasketStore = useProductBasketStore();
 
 const active = useState();
+
+
+function copyBarcodeToClipboard() {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(product.barcode).then(() => {
+      createFlashAlert('success', 'Артикул скопійовано до буфера обміну')
+    }).catch(err => {
+      createFlashAlert('error', 'Не вдалося скопіювати текст: ' + err)
+    });
+  } else {
+    createFlashAlert('error', 'Ваш браузер не підтримує функцію копіювання до буфера обміну')
+  }
+}
+
 </script>
 
 <style scoped>
+.card {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  border-color: #5BA9D9;
+  box-shadow: 0 0 4px 1px #cdf4fa;
+}
+
 /* Задайте стилі для "enter" і "leave" анімацій */
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.2s;

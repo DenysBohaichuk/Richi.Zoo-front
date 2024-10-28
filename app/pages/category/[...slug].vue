@@ -1,7 +1,7 @@
 <template>
   <div>
     <ClientOnly>
-      <BaseBreadcrumbs :breadcrumbs="data.breadcrumbs"/>
+      <BaseBreadcrumbs :breadcrumbs="data.breadcrumbs" class="text-sm"/>
     </ClientOnly>
 
     <div v-if="data.products.length === 0" class="py-16 sm:py-24 lg:mx-auto lg:max-w-7xl lg:px-8 min-h-screen">

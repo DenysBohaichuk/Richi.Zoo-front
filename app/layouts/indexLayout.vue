@@ -1,5 +1,5 @@
 <template>
-  <BaseLayoutsMainLayoutWrapper containerClass="content pt-16 text-sm">
+  <BaseLayoutsMainLayoutWrapper containerClass="content pt-16">
     <template #main-content>
       <slot />
     </template>

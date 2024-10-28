@@ -1,7 +1,7 @@
 <template>
 <div  class="min-h-screen">
   <ClientOnly>
-    <BaseBreadcrumbs :breadcrumbs="[]"/>
+    <BaseBreadcrumbs :breadcrumbs="[]" class="text-sm"/>
   </ClientOnly>
 
   <div>

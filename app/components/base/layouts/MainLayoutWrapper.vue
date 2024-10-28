@@ -3,7 +3,7 @@
     <BaseLoaderPageLoadKakiDog v-show="waitLoadPage" :opacity="'100'" :bgColor="'white'"/>
 
     <div>
-      <BaseNavbarNavBar class="border-b border-r border-gray-200 text-lg leading-none"
+      <BaseNavbarNavBar class="border-b border-r border-gray-200 leading-none"
                         @toggleSlideOver="sidebarStore.toggleSlideOver"/>
 
         <div :class="containerClass">

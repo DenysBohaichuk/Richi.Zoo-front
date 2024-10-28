@@ -2,7 +2,7 @@
   <div >
 
     <ClientOnly>
-      <BaseBreadcrumbs :breadcrumbs="data.breadcrumbs" />
+      <BaseBreadcrumbs :breadcrumbs="data.breadcrumbs" class="text-sm"/>
     </ClientOnly>
 
     <main class="mx-auto max-w-7xl sm:px-6 pt-8 sm:pt-16 lg:px-8">
