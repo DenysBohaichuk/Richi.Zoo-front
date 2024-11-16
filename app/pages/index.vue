@@ -46,6 +46,10 @@ onBeforeMount(async () => {
 
 
 const sectionedCategories = computed(() => {
+  if (!Array.isArray(categories.value)) {
+    return [];
+  }
+
   const sections = [];
   let index = 0;
   while (index < categories.value.length) {

@@ -6,10 +6,9 @@
             class="inline-flex items-center px-6 py-5 gap-x-1 text-gray-900 hover:bg-gray-100 cursor-pointer"
             @mouseenter="delayedOpenPanel"
             @mouseleave="cancelOpenPanel"
-            @click="togglePanel"
         >
-          <slot />
-          <ChevronDownIcon class="h-5 w-5" aria-hidden="true" />
+          <slot/>
+          <ChevronDownIcon class="h-5 w-5" aria-hidden="true"/>
         </div>
       </div>
     </div>
@@ -79,46 +78,49 @@
             </div>
           </div>
 
-          <div class="grid grid-cols-1 gap-10 sm:gap-8 lg:grid-cols-2">
-            <h3 class="sr-only">Recent posts</h3>
-            <article
-                v-for="post in randomPosts"
-                :key="post.id"
-                class="relative isolate flex max-w-2xl flex-col gap-x-8 gap-y-6 sm:flex-row sm:items-start lg:flex-col lg:items-stretch"
-            >
-              <div class="relative flex-none">
-                <img
-                    class="aspect-[2/1] w-full rounded-lg bg-gray-100 object-cover sm:aspect-[16/9] sm:h-32 lg:h-auto"
-                    :src="post.imageUrl"
-                    alt=""
-                />
-                <div class="absolute inset-0 rounded-lg ring-1 ring-inset ring-gray-900/10" />
-              </div>
-              <div>
-                <div class="flex items-center gap-x-4">
-                  <time
-                      :datetime="post.datetime"
-                      class="text-sm leading-6 text-gray-600"
-                  >{{ post.date }}</time
-                  >
-                  <a
-                      :href="post.category.href"
-                      class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100"
-                  >{{ post.category.title }}</a
-                  >
+          <ClientOnly>
+            <div class="grid grid-cols-1 gap-10 sm:gap-8 lg:grid-cols-2">
+              <article
+                  v-for="post in randomPosts"
+                  :key="post.id"
+                  class="relative isolate flex max-w-2xl flex-col gap-x-8 gap-y-6 sm:flex-row sm:items-start lg:flex-col lg:items-stretch"
+              >
+                <div class="relative flex-none">
+                  <NuxtImg
+                      class="aspect-[2/1] w-full rounded-lg bg-gray-100 object-cover sm:aspect-[16/9] sm:h-32 lg:h-auto"
+                      :src="post.imageUrl"
+                      :error="'https://placeholder.com/default.jpg'"
+                      alt="Post image"
+                  />
+                  <div class="absolute inset-0 rounded-lg ring-1 ring-inset ring-gray-900/10"/>
                 </div>
-                <h4 class="mt-2 text-sm font-semibold leading-6 text-gray-900">
-                  <a :href="post.href">
-                    <span class="absolute inset-0" />
-                    {{ post.title }}
-                  </a>
-                </h4>
-                <p class="mt-2 text-sm leading-6 text-gray-600">
-                  {{ post.description }}
-                </p>
-              </div>
-            </article>
-          </div>
+                <div>
+                  <div class="flex items-center gap-x-4">
+                    <time
+                        :datetime="post.datetime"
+                        class="text-sm leading-6 text-gray-600"
+                    >{{ post.date }}
+                    </time
+                    >
+                    <a
+                        :href="post.category.href"
+                        class="relative z-10 rounded-full bg-gray-50 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-100"
+                    >{{ post.category.title }}</a
+                    >
+                  </div>
+                  <h4 class="mt-2 text-sm font-semibold leading-6 text-gray-900">
+                    <a :href="post.href">
+                      <span class="absolute inset-0"/>
+                      {{ post.title }}
+                    </a>
+                  </h4>
+                  <p class="mt-2 text-sm leading-6 text-gray-600">
+                    {{ post.description }}
+                  </p>
+                </div>
+              </article>
+            </div>
+          </ClientOnly>
         </div>
       </div>
     </transition>
@@ -126,11 +128,11 @@
 </template>
 
 <script setup>
-import { ChevronDownIcon } from '@heroicons/vue/20/solid';
-import { useNavbarStore } from '~/store/components/navbar.js';
+import {ChevronDownIcon} from '@heroicons/vue/20/solid';
+import {useNavbarStore} from '~/store/components/navbar.js';
 import recentPosts from '~/assets/content/recentPosts.json'; // Import the JSON file
-import { getDataFromStore } from '~/mixins/MixinNavbarCategories.js';
-import { ref } from 'vue';
+import {getDataFromStore} from '~/mixins/MixinNavbarCategories.js';
+import {ref} from 'vue';
 
 // Function to randomly select 2 posts
 function getRandomPosts(posts, numberOfPosts) {
@@ -139,6 +141,15 @@ function getRandomPosts(posts, numberOfPosts) {
 }
 
 const randomPosts = ref(getRandomPosts(recentPosts, 2));
+
+async function checkImage(url) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(url); // Image exists
+    img.onerror = () => resolve('https://placeholder.com/default.jpg'); // Fallback
+    img.src = url;
+  });
+}
 
 const isPanelOpen = ref(false);
 let openTimeout = null;
@@ -156,11 +167,6 @@ function cancelOpenPanel() {
   delayedClosePanel();
 }
 
-function togglePanel() {
-  if (closeTimeout) clearTimeout(closeTimeout);
-  if (openTimeout) clearTimeout(openTimeout);
-  isPanelOpen.value = !isPanelOpen.value;
-}
 
 function delayedClosePanel() {
   if (openTimeout) clearTimeout(openTimeout);
@@ -179,7 +185,7 @@ const activeSubcategory = ref(null);
 const categories = ref([]);
 const data = await getDataFromStore();
 categories.value = data.categoriesDropdown;
-activeCategory.value = categories.value[0];
+activeCategory.value = Array.isArray(categories?.value) ? categories.value[0] : null;
 
 const setActiveCategory = (category) => {
   activeCategory.value = category;

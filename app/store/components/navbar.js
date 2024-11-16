@@ -15,10 +15,11 @@ export const useNavbarStore = defineStore('navbar', {
                 this.categoriesDropdown = await apiMethods.getListCategories();
                 if (!this.categoriesDropdown.status) {
                     const errorMessage = this.categoriesDropdown.message || 'Error fetching categories';
-                    modalInfoStore.openModal(errorMessage);
+                    console.log(errorMessage)
+                 //  modalInfoStore.openModal(false, errorMessage);
                 }
             } catch (error) {
-                modalInfoStore.openModal(false, error.message);
+                console.log(error.message);
             }
         },
     }
