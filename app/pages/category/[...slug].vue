@@ -12,7 +12,7 @@
     </div>
     <div v-else class="">
       <div class="">
-        <TemplatesProductsListView :category="data.category" :products="data.products"/>
+        <TemplatesProductsListView :category="data.category" :products="data.products" :filters="data.filters"/>
       </div>
     </div>
   </div>

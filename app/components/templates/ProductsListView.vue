@@ -106,39 +106,49 @@
           <h2 id="products-heading" class="sr-only">Products</h2>
 
           <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+            <ClientOnly>
             <!-- Filters -->
-<!--            <form class="hidden lg:block">
-              <h3 class="sr-only">Categories</h3>
-              <ul role="list" class="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
-                <li v-for="category in subCategories" :key="category.name">
-                  <a :href="category.href">{{ category.name }}</a>
-                </li>
-              </ul>
+              <form class="mt-4 border-t border-gray-200">
+                <h3 class="sr-only">Categories</h3>
+                <ul role="list" class="px-2 py-3 font-medium text-gray-900">
+                  <li v-for="category in subCategories" :key="category.name">
+                    <a :href="category.href" class="block px-2 py-3">{{ category.name }}</a>
+                  </li>
+                </ul>
 
-              <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-b border-gray-200 py-6" v-slot="{ open }">
-                <h3 class="-my-3 flow-root">
-                  <DisclosureButton class="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                    <span class="font-medium text-gray-900">{{ section.name }}</span>
-                    <span class="ml-6 flex items-center">
-                      <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true" />
-                      <MinusIcon v-else class="h-5 w-5" aria-hidden="true" />
-                    </span>
-                  </DisclosureButton>
-                </h3>
-                <DisclosurePanel class="pt-6">
-                  <div class="space-y-4">
-                    <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
-                      <input :id="`filter-${section.id}-${optionIdx}`" :name="`${section.id}[]`" :value="option.value" type="checkbox" :checked="option.checked" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
-                      <label :for="`filter-${section.id}-${optionIdx}`" class="ml-3 text-sm text-gray-600">{{ option.label }}</label>
+                <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-t border-gray-200 px-4 py-6" v-slot="{ open }">
+                  <h3 class="-mx-2 -my-3 flow-root">
+                    <DisclosureButton class="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
+                      <span class="font-medium text-gray-900">{{ section.name }}</span>
+                      <span class="ml-6 flex items-center">
+                          <PlusIcon v-if="!open" class="h-5 w-5" aria-hidden="true" />
+                          <MinusIcon v-else class="h-5 w-5" aria-hidden="true" />
+                        </span>
+                    </DisclosureButton>
+                  </h3>
+                  <DisclosurePanel class="pt-6">
+                    <div class="space-y-6">
+                      <div v-for="option in section.filter_values" :key="option.id" class="flex items-center">
+                        <input
+                            type="checkbox"
+                            :id="`filter-${section.id}-${option.id}`"
+                            :name="`filter-${section.id}`"
+                            :value="option.id"
+                            v-model="selectedFilters[section.id]"
+                            @change="toggleFilterValue(section.id, option.id)"
+                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <label :for="`filter-${section.id}-${option.id}`" class="ml-3 text-sm text-gray-600">
+                          {{ option.value }}
+                        </label>
+                      </div>
                     </div>
-                  </div>
-                </DisclosurePanel>
-              </Disclosure>
-            </form>-->
-
+                  </DisclosurePanel>
+                </Disclosure>
+              </form>
+            </ClientOnly>
             <!-- Product grid -->
-            <div class="lg:col-span-4">
-<!--            <div class="lg:col-span-3">-->
+            <div class="lg:col-span-3">
               <TemplatesProductGrid  :products="products"/>
             </div>
           </div>
@@ -165,59 +175,25 @@ import {
 } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/vue/20/solid'
-const config = useAppConfig();
+const appConfig = useAppConfig();
+const runtimeConfig = useRuntimeConfig();
 
-const sortOptions = [
-  { name: 'Most Popular', href: '#', current: true },
-  { name: 'Best Rating', href: '#', current: false },
-  { name: 'Newest', href: '#', current: false },
-  { name: 'Price: Low to High', href: '#', current: false },
-  { name: 'Price: High to Low', href: '#', current: false },
-]
-const subCategories = [
-  { name: 'Totes', href: '#' },
-  { name: 'Backpacks', href: '#' },
-  { name: 'Travel Bags', href: '#' },
-  { name: 'Hip Bags', href: '#' },
-  { name: 'Laptop Sleeves', href: '#' },
-]
-const filters = [
-  {
-    id: 'color',
-    name: 'Color',
-    options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false },
-    ],
-  },
-  {
-    id: 'category',
-    name: 'Category',
-    options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false },
-    ],
-  },
-  {
-    id: 'size',
-    name: 'Size',
-    options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true },
-    ],
-  },
-]
+const subCategories = ref([
+  { name: 'Коти', href: '/category/cats' },
+  { name: 'Собаки', href: '/category/dogs' },
+  { name: 'Риби', href: '/category/fish' },
+]);
+
+
+// Обробка змін фільтра
+function updateFilters() {
+  const activeFilters = filters.value
+      .map(section => section.options.filter(option => option.checked).map(option => option.value))
+      .flat();
+  console.log('Активні фільтри:', activeFilters);
+  // Тут можна виконати запит до API або оновити відфільтровані товари
+}
+
 
 const mobileFiltersOpen = ref(false)
 
@@ -225,22 +201,101 @@ const mobileFiltersOpen = ref(false)
 // Отримуємо `category` та `products` з props
 const props = defineProps({
   category: Object,
-  products: Array
+  products: Array,
+  filters: Array
 });
 
 // Тепер `category` та `products` доступні через `props`
 const category = props.category;
-const products = props.products;
+const products = ref(props.products);
+const filters = ref(props.filters);
+
+
+
+
+
+
+
+// Роутер і поточний маршрут
+const route = useRoute();
+const router = useRouter();
+
+// Вибрані фільтри
+const selectedFilters = ref({});
+
+// Ініціалізуємо фільтри з GET-параметрів при завантаженні
+onMounted(() => {
+  initializeFiltersFromQuery(route.query);
+});
+
+// Спостереження за вибраними фільтрами для оновлення URL при зміні
+watch(selectedFilters, () => {
+  updateUrlWithFilters();
+}, { deep: true });
+
+// Функція для ініціалізації вибраних фільтрів з URL
+function initializeFiltersFromQuery(query) {
+  filters.value.forEach(section => {
+    const queryParam = query[`filter_${section.id}`];
+    selectedFilters.value[section.id] = queryParam ? queryParam.split(',') : [];
+  });
+}
+
+// Функція для оновлення URL з вибраними фільтрами
+function updateUrlWithFilters() {
+  const query = { ...route.query };
+
+  Object.keys(selectedFilters.value).forEach(filterId => {
+    const values = selectedFilters.value[filterId];
+    if (values.length) {
+      const filterName = filters.value.find(section => section.id === filterId)?.name.toLowerCase();
+      query[filterName] = values.join(',');
+    } else {
+      const filterName = filters.value.find(section => section.id === filterId)?.name.toLowerCase();
+      delete query[filterName];
+    }
+  });
+
+  router.push({ query }).catch(() => {}); // Оновлення URL без перезавантаження
+}
+
+function toggleFilterValue(filterId, valueId) {
+  if (!selectedFilters[filterId]) {
+    selectedFilters[filterId] = [];
+  }
+
+  const filterValues = selectedFilters[filterId];
+  const index = filterValues.indexOf(valueId);
+
+  console.log("Поточний filterId:", filterId);
+  console.log("Поточний valueId:", valueId);
+  console.log("Поточні значення фільтра перед зміною:", toRaw(filterValues));
+  console.log("Індекс знайденого значення:", index);
+
+
+  if (index === -1) {
+    selectedFilters[filterId] = [...filterValues, valueId];
+  } else {
+    selectedFilters[filterId] = filterValues.filter(val => val !== valueId);
+  }
+  console.log(selectedFilters.value)
+}
+
+
+
+
+
+
 
 // Визначаємо текст для мета-опису
 const categoryDescription = category.plainDescription?.trim() || 'Перегляньте наші товари у категорії...';
 
-useHead({
-  title: category.name + ' | ' + config.projectName,
+/*useHead({
+  title: `${category.name} | ${appConfig.projectName}`,
   meta: [
     { name: 'robots', content: 'index, follow' },
     { name: 'description', content: categoryDescription },
-    { property: 'og:title', content: category.name + ' | ' + config.projectName },
+    { property: 'og:title', content: category.name + ' | ' + appConfig.projectName },
     { property: 'og:description', content: categoryDescription },
   ],
   script: [
@@ -252,7 +307,7 @@ useHead({
         "itemListElement": products.map((product, index) => ({
           "@type": "ListItem",
           "position": index + 1,
-          "url": config.domain + '/product/' + product.id,
+          "url": runtimeConfig.public.appURL + '/product/' + product.id,
           "item": {
             "@type": "Product",
             "name": product.name,
@@ -261,7 +316,7 @@ useHead({
             "sku": product.barcode,
             "offers": {
               "@type": "Offer",
-              "url": config.domain + '/product/' + product.id,
+              "url": runtimeConfig.public.appURL + '/product/' + product.id,
               "priceCurrency": "UAH",
               "price": product.price,
               "availability": "https://schema.org/InStock",
@@ -272,5 +327,5 @@ useHead({
       })
     }
   ]
-});
+});*/
 </script>

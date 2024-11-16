@@ -5,12 +5,14 @@ export async function getDataFromStore(){
     const category = data.category
     const subcategories = data.subcategories
     const products = data.products
+    const filters = data.filters
     const breadcrumbs = data.breadcrumbs
 
     return {
         category,
         subcategories,
         products,
+        filters,
         breadcrumbs
     }
 }
