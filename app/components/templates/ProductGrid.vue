@@ -2,7 +2,11 @@
   <div class="bg-white">
     <div class="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:max-w-7xl lg:px-8">
 
-      <div class="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3  lg:gap-x-8 xl:grid-cols-5">
+      <div v-if="products.length === 0" class="text-center py-16 sm:py-24">
+        <p class="text-gray-500 text-lg">Наразі немає доступних товарів. Будь ласка, спробуйте пізніше.</p>
+      </div>
+
+      <div v-else class="grid grid-cols-1 gap-y-4 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 md:grid-cols-3 lg:gap-x-8 xl:grid-cols-5">
         <ProductCard
             v-for="product in products"
             :key="product.id"
@@ -25,10 +29,21 @@
 
 <script setup>
 import ProductCard from './ProductCard.vue';
+import {ref} from "vue";
 
-defineProps({
+const props = defineProps({
   products: Array
 });
+
+const products = ref(props.products);
+
+watch(
+    () => props.products,
+    (newProducts) => {
+      products.value = newProducts;
+    },
+);
+
 </script>
 
 <style>

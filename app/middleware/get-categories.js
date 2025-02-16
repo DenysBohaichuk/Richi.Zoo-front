@@ -2,9 +2,12 @@ import {useCategoryStore} from "~/store/categories/category.js";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
     const categorySlug = to.params.slug.join("/"); // Отримайте slug з параметрів URL
+    const queryString = new URLSearchParams(to.query).toString();
+
+    const url = categorySlug + (queryString ? '?' + queryString : '');
 
     try {
-        await useCategoryStore().getCategoryData(categorySlug);
+        await useCategoryStore().getCategoryData(url);
         const categoryData = await useCategoryStore().categoryData;
 
         if (!categoryData.status) {

@@ -142,14 +142,6 @@ function getRandomPosts(posts, numberOfPosts) {
 
 const randomPosts = ref(getRandomPosts(recentPosts, 2));
 
-async function checkImage(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(url); // Image exists
-    img.onerror = () => resolve('https://placeholder.com/default.jpg'); // Fallback
-    img.src = url;
-  });
-}
 
 const isPanelOpen = ref(false);
 let openTimeout = null;

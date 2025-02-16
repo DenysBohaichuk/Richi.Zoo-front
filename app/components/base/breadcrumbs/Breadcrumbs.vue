@@ -1,6 +1,6 @@
 <template>
   <nav class="flex border-b border-gray-200 bg-white" aria-label="Breadcrumb">
-    <ol role="list" class="mx-auto flex w-full max-w-screen-xl space-x-4 px-4 sm:px-6 lg:px-8">
+    <ol role="list" class="flex w-full max-w-screen-xl space-x-4 px-4 sm:px-6 lg:px-8">
       <!-- Головна сторінка -->
       <li class="flex">
         <div class="flex items-center">
@@ -61,7 +61,7 @@ import {timeout} from "ioredis/built/utils";
 // Приймаємо breadcrumbs як пропс
 const props = defineProps({
   breadcrumbs: {
-    type: Array,
+    type: Object,
     required: true,
     default: []
   }

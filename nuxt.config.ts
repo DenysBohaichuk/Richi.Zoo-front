@@ -31,11 +31,12 @@ export default defineNuxtConfig({
         ],
         defaultLocale: 'uk',
         lazy: true,
+        restructureDir: 'app/',
         langDir: 'locales/',
         strategy: 'no_prefix',
         detectBrowserLanguage: {
             cookieKey: 'userLang',
-            alwaysRedirect: 'true'
+            alwaysRedirect: true
         },
     },
 

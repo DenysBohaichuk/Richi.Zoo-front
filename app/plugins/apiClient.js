@@ -7,6 +7,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     const apiClient = axios.create({
         baseURL: config.public.apiURL,
         // інші налаштування
+        headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+        },
     });
 
     // Додаємо apiClient в контекст nuxtApp
