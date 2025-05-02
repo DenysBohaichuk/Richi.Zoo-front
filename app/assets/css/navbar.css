@@ -111,7 +111,7 @@
     }
 }
 
-@media (max-width: 425px) {
+@media (max-width: 769px) {
     #nav-bar .heart-icon, #nav-bar .shopping-cart-icon {
         display: none;
     }

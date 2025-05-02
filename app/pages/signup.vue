@@ -1,63 +1,68 @@
 <template>
-  <div class="container">
+  <BaseUserIsAuthUser  :requireAuth="false">
     <div class="relative">
-      <BaseLoaderKakiDog v-show="formSubmitted" :round="'15px'"/>
-      <div class="max-w-[500px] h-max bg-white p-5 rounded-[15px]">
-        <div class="mb-3 text-xl flex justify-center">Реєстрація</div>
-        <form ref="formSignup" @submit.prevent="onSubmit" class="flex flex-col h-full gap-5">
-          <!-- Пошта -->
-          <div class="relative">
-            <BaseFieldsEmailField label="Пошта*" name="email" id="email" v-model="emailValue" :error="emailError"/>
-          </div>
-          <!-- Ім'я -->
-          <div class="flex gap-5 w-full flex-col sm:flex-row">
-            <div class="sm:w-1/2">
-              <BaseFieldsInputField label="Ім'я*" id="name" type="text" v-model="nameValue" :error="nameError"/>
-            </div>
-            <!-- Прізвище -->
-            <div class="sm:w-1/2">
-              <BaseFieldsInputField label="Прізвище" id="surname" type="text" v-model="surnameValue"/>
-            </div>
-          </div>
-          <!-- Телефон -->
-          <div>
-            <BaseFieldsInputField label="Телефон" id="phone" type="tel" v-model="phoneValue"/>
-          </div>
-          <!-- Пароль та повторення паролю -->
-          <div class="flex gap-5 flex-col sm:flex-row">
-            <div class="sm:w-1/2">
-              <BaseFieldsPasswordField label="Пароль*" id="password" type="password" v-model="passValue"
-                                     :error="passError"/>
-            </div>
-            <div class="sm:w-1/2">
-              <BaseFieldsPasswordField label="Повторити пароль*" id="repeatPassword" type="password"
-                                     v-model="repeatPassValue" :error="repeatPassError"/>
-            </div>
-          </div>
-          <div class="flex justify-center items-center flex-col gap-3">
-            <BaseButtonsSimpleSkyButton :text="'Зареєструватися'"/>
-            <span>Або</span>
-            <BaseButtonsGoogleSignInButton @signInStart="formSubmitted = true" @signInComplete="formSubmitted = false" class="h-8"/>
+      <div class="mb-5 text-xl font-semibold text-center">{{ $t('auth.signup.title') }}</div>
+      <form ref="formSignup" @submit.prevent="onSubmit" class="flex flex-col gap-6">
+        <!-- Пошта -->
+        <div>
+          <BaseFieldsEmailField :label="$t('auth.login.email')" name="email" id="email" v-model="emailValue" :error="emailError" />
+        </div>
 
+        <!-- Ім'я та Прізвище -->
+        <div class="flex gap-5 flex-col sm:flex-row">
+          <div class="sm:w-1/2">
+            <BaseFieldsInputField :label="$t('auth.signup.name')" id="name" type="text" v-model="nameValue" :error="nameError" />
           </div>
-        </form>
-      </div>
+          <div class="sm:w-1/2">
+            <BaseFieldsInputField :label="$t('auth.signup.surname')" id="surname" type="text" v-model="surnameValue" />
+          </div>
+        </div>
+
+        <!-- Телефон -->
+        <div>
+          <BaseFieldsInputField :label="$t('auth.signup.phone')" id="phone" type="tel" v-model="phoneValue" />
+        </div>
+
+        <!-- Пароль та повторення паролю -->
+        <div class="flex gap-5 flex-col sm:flex-row">
+          <div class="sm:w-1/2">
+            <BaseFieldsPasswordField :label="$t('auth.signup.password')" id="password" type="password" v-model="passValue" :error="passError" />
+          </div>
+          <div class="sm:w-1/2">
+            <BaseFieldsPasswordField :label="$t('auth.signup.confirm_password')" id="repeatPassword" type="password" v-model="repeatPassValue" :error="repeatPassError" />
+          </div>
+        </div>
+
+        <!-- Кнопка реєстрації -->
+        <div class="flex flex-col items-center gap-4">
+          <BaseButtonsSimpleSkyButton :text="$t('auth.signup.register_button')" class="min-w-[170px]"></BaseButtonsSimpleSkyButton>
+
+          <span class="text-gray-500 text-sm">{{ $t('auth.another_auth') }}</span>
+
+          <BaseButtonsGoogleSignInButton @signInStart="formSubmitted = true" @signInComplete="formSubmitted = false" class="h-8" />
+        </div>
+      </form>
     </div>
-  </div>
+  </BaseUserIsAuthUser>
 </template>
 
 <script setup>
+definePageMeta({
+  layout: 'auth',
+});
 
+import {useLoading} from "~/composables/auth/useLoading.js";
 import {ref} from 'vue';
 import {useField, useForm} from 'vee-validate';
 import * as yup from 'yup';
 import {useModalInfoStore} from "~/store/modals/info.js";
 
-const formSubmitted = ref(false);
 const modalInfoStore = useModalInfoStore();
 const formSignup = ref(null);
+const { formSubmitted, setLoading } = useLoading()
 
-
+const startLoading = () => setLoading(true)
+const stopLoading = () => setLoading(false)
 
 // Визначаємо схему валідації
 const schema = yup.object({
@@ -82,7 +87,7 @@ const {value: repeatPassValue, errorMessage: repeatPassError} = useField('repeat
 
 // Обробник відправки форми
 const onSubmit = handleSubmit(async () => {
-  formSubmitted.value = true; // Позначаємо, що форма була відправлена
+  startLoading();
 
   const payload = {
     email: emailValue.value,
@@ -103,8 +108,8 @@ const onSubmit = handleSubmit(async () => {
     passValue.value = '';
     repeatPassValue.value = '';
   }
-  formSubmitted.value = false
 
+  stopLoading();
 });
 
 

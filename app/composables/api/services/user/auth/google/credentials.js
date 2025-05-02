@@ -1,34 +1,41 @@
-import {ref} from 'vue'
-import {parseJwt} from '~/utils/jwt.js'
-import {useModalInfoStore} from '~/store/modals/info.js';
+import { ref } from 'vue';
+import { parseJwt } from '~/utils/jwt.js';
+import { useModalInfoStore } from '~/store/modals/info.js';
+import { authModule } from '~/composables/api/services/user/auth/authModule.js';
+import { responseFormat } from "~/composables/api/responses/responseFormat.js";
 
 export default function useAuth() {
-    const user = ref(null)
-    const errorMessage = ref("")
+    const user = ref(null);
+    const errorMessage = ref('');
     const modalInfoStore = useModalInfoStore();
 
     const handleCredentialResponse = async (response) => {
+
         const responsePayload = parseJwt(response.credential);
         if (responsePayload) {
             user.value = {
                 email: responsePayload.email,
-                id: responsePayload.sub,
+                google_id: responsePayload.sub, // Google ID
                 name: responsePayload.given_name,
                 surname: responsePayload.family_name,
-                gis: true,
-                GISToken: response.credential,
+                gis: true, // Залишаємо для сумісності
+                GISToken: response.credential, // JWT токен від Google
             };
 
-            let responseAuth = await apiMethods.login(user.value);
+            const responseAuth = await authModule.googleAuth(user.value);
 
-            if (!responseAuth.status)
-                modalInfoStore.openModal(responseAuth.status, await responseMessages.getMessage(responseAuth));
-            else
-                navigateTo('/');
+            if (responseAuth.status) {
+                await navigateTo('/');
+            } else {
+                modalInfoStore.openModal(
+                    responseAuth.status,
+                    await responseFormat.response(responseAuth.error.message)
+                );
+            }
         } else {
-            errorMessage.value = "Error decoding JWT";
+            errorMessage.value = 'Помилка декодування Google JWT';
         }
-    }
+    };
 
-    return {user, errorMessage, handleCredentialResponse}
+    return { user, errorMessage, handleCredentialResponse };
 }

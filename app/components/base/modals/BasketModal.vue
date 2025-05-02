@@ -1,13 +1,13 @@
 <template>
   <ClientOnly>
     <TransitionRoot as="template" :show="open">
-      <Dialog as="div" class="relative z-10" @close="productBasketStore.toggleModal()">
+      <Dialog as="div" class="relative z-40" @close="productBasketStore.toggleModal()">
         <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0" enter-to="opacity-100"
                          leave="ease-in duration-200" leave-from="opacity-100" leave-to="opacity-0">
           <div class="fixed inset-0 block bg-gray-500 bg-opacity-75 transition-opacity"/>
         </TransitionChild>
 
-        <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="fixed inset-0 z-40 overflow-y-auto">
           <div class="flex min-h-full items-stretch justify-center text-center sm:items-center sm:px-6 lg:px-8">
             <TransitionChild as="template" enter="ease-out duration-300" enter-from="opacity-0 scale-105"
                              enter-to="opacity-100 scale-100" leave="ease-in duration-200"

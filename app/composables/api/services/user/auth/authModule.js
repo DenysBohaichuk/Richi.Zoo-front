@@ -25,11 +25,18 @@ export const authModule = {
         return resp;
     },
 
+    async googleAuth(user) {
+        const resp = await AuthService.googleAuth(user);
+        if (resp && resp.status) {
+            this.userLogin(resp.data.token);
+        }
+        return resp;
+    },
 
     userLogin(userToken) {
         localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('user', JSON.stringify(userToken));
-        useAuthStore().userStatus();
+        localStorage.setItem('userToken', JSON.stringify(userToken));
+        useAuthStore().userData();
     },
 
 

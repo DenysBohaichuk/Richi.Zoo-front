@@ -30,20 +30,6 @@ body{
 
 }
 
-/*Блок з контентом*/
-.container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /*height: calc(100vh - 128px);*/
-}
-
-/*Сторінка з контентом*/
-.page-container{
-    /*width: 100%;*/
-    /*height: calc(100vh - 96px);*/
-
-}
 
 /*Жирність іконок*/
 .icon-stroke {

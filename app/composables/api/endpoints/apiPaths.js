@@ -1,6 +1,7 @@
 const apiPaths = {
+    google: '/auth/google',
     signup: '/auth/signup',
-    verify_email: '/auth/verify-email?token=',
+    verify_email: '/auth.vue/verify-email?token=',
     login: '/auth/login',
 
     category: '/categories/get-category/',

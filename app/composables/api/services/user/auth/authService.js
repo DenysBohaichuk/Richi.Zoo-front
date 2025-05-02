@@ -1,43 +1,39 @@
-/**
- * Клас який який робить звернення до API з завчасно виставленими параметрами
- */
-
 import apiPath from '~/composables/api/endpoints/apiPaths.js';
-import { responseFormat } from "~/composables/api/responses/responseFormat.js";
-import apiService from "~/composables/api/services/apiService.js";
-
-const { response, fetchData,  createData } = apiService();
+import { responseFormat } from '~/composables/api/responses/responseFormat.js';
+import getApiService from "~/composables/api/services/getApiService.js";
 
 class AuthService {
     async signup(user) {
+        const { response, createData } = getApiService();
+
         await createData(apiPath.signup, {
             email: user.email,
             name: user.name,
             surname: user.surname,
             phone: user.phone,
-            isGIS: user.gis,
-            password_hash: user.password
+            password: user.password || null,
         });
         return responseFormat.response(response.value);
     }
 
-    async verifyEmail(token) {
-        await fetchData(apiPath.verify_email + token);
+    async login(user) {
+        const { response, createData } = getApiService();
+
+        await createData(
+            apiPath.login,
+            {
+                email: user.email,
+                password: user.password || null,
+            });
+
         return responseFormat.response(response.value);
     }
 
-    async login(user) {
-        await createData(apiPath.login, {
-            email: user.email,
-            password_hash: user.password,
-            isGIS: user.gis,
-        }, user.GISToken);
+    async googleAuth(user) {
+        const { response, createData } = getApiService();
 
-        let resp = responseFormat.response(response.value);
-        if (resp.status) {
-            localStorage.setItem('user', JSON.stringify(resp.data.token));
-        }
-        return resp;
+        await createData(apiPath.google, {}, user.GISToken ? { 'GISToken': user.GISToken } : null);
+        return responseFormat.response(response.value);
     }
 }
 

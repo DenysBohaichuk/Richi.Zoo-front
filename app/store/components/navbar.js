@@ -13,6 +13,7 @@ export const useNavbarStore = defineStore('navbar', {
 
             try {
                 this.categoriesDropdown = await apiMethods.getListCategories();
+
                 if (!this.categoriesDropdown.status) {
                     const errorMessage = this.categoriesDropdown.message || 'Error fetching categories';
                     console.log(errorMessage)

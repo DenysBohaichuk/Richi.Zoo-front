@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full h-full absolute flex justify-center items-center z-50">
-    <div class="inner z-50" style="width: 50px; height: 50px;">
+  <div class="w-full h-full absolute flex justify-center items-center z-30">
+    <div class="inner z-30" style="width: 50px; height: 50px;">
       <svg class="smooth-rotation" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
            style="margin:auto;display:block;" width="50px" height="50px" viewBox="0 0 100 100"
            preserveAspectRatio="xMidYMid">
@@ -77,7 +77,7 @@
       </svg>
 
     </div>
-    <div :class="`absolute w-full h-full z-40 bg-black opacity-20 rounded-[${round}]`"></div>
+    <div :class="`absolute w-full h-full z-20 bg-black opacity-20 rounded-[${round}]`"></div>
   </div>
 </template>
 

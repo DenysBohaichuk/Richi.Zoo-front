@@ -26,11 +26,11 @@ export default function apiService(apiClient) {
         }
     };
 
-    const createData = async (path, payload, token = '') => {
+    const createData = async (path, payload, headers = {}) => {
         isLoading.value = true;
         try {
-            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-            const resp = await apiClient.post(path, payload, { headers });
+            const headersRequest = headers.token ? { 'Authorization': `Bearer ${headers.token}` } : headers;
+            const resp = await apiClient.post(path, payload, { headers: headersRequest });
             response.value = resp.data;
             data.value = resp.data;
         } catch (err) {

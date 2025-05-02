@@ -23,7 +23,7 @@
                              leave-to="translate-x-full">
               <DialogPanel class="pointer-events-auto w-screen max-w-md">
                 <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-                  <div class="px-4 sm:px-6">
+                  <div class="pl-4 pr-2 sm:px-6">
                     <div class="flex items-start justify-between">
                       <DialogTitle class="text-base font-semibold leading-6 text-gray-900 h-10">
                         <LazyBaseLogoHBL3 class="h-full"/>
@@ -40,7 +40,7 @@
                   </div>
 
                   <!-- Відображення початкових кнопок або категорій -->
-                  <div class="relative mt-6 flex-1 px-4 sm:px-6">
+                  <div class="relative mt-6 flex-1 pl-4 pr-2 sm:px-6">
                     <!-- Єдиний кореневий елемент для Transition -->
                     <Transition :name="transitionDirection" mode="out-in">
                       <template v-if="!showCategories && !selectedCategory">
@@ -50,6 +50,51 @@
                             <Squares2X2Icon class="w-6 h-6 icon-stroke heart-icon group-hover:text-green-600 transition-colors duration-200"/>
                             <span class="group-hover:text-cerulean transition-colors duration-200">{{ $t('navbar.categories') }}</span>
                           </button>
+
+                          <!-- Блок авторизації -->
+                          <div class="border-t border-b border-gray-200 py-4 mb-4">
+                            <div class="flex items-center gap-3  pb-3">
+                              <!-- Іконка користувача -->
+                              <UserCircleIcon class="w-8 h-8 text-gray-600 icon-stroke" />
+
+                              <div class="flex-1 mt-1">
+                                <div v-if="authStore.isLoggedIn">
+                                  <p class="text-base font-medium text-gray-800">
+                                    {{ authStore.user?.name }} {{ authStore.user?.surname || '' }}
+                                  </p>
+                                  <p class="text-sm text-gray-500 truncate">
+                                    {{ authStore.user?.email }}
+                                  </p>
+                                </div>
+
+                                <h3 v-else class="text-lg font-semibold text-gray-900">
+                                  {{ $t('sidebar.personalCabinet') }}
+                                </h3>
+                              </div>
+                            </div>
+
+                            <!-- Кнопка "Увійти" (якщо не авторизований) -->
+                            <div v-if="!authStore.isLoggedIn" class="px-4">
+                              <NuxtLink
+                                  to="/login"
+                                  @click="emitCloseEvent"
+                                  class="block w-full text-center bg-azure text-white px-4 py-2 rounded-md hover:bg-cerulean transition-colors duration-200"
+                              >
+                                {{ $t('sidebar.loginToCabinet') }}
+                              </NuxtLink>
+                            </div>
+
+                            <!-- Кнопка "Перейти до профілю" (якщо авторизований) -->
+                            <div v-else class="px-4">
+                              <NuxtLink
+                                  to="/profile"
+                                  @click="emitCloseEvent"
+                                  class="block w-full text-center bg-gray-100 text-gray-900 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors duration-200"
+                              >
+                                {{ $t('sidebar.goToProfile') }}
+                              </NuxtLink>
+                            </div>
+                          </div>
 
                           <NuxtLink to="/favorites" @click="emitCloseEvent" class="w-full px-4 py-2 flex text-lg font-semibold rounded-md text-center items-center gap-1 leading-6 text-gray-900 group">
                             <HeartIcon class="w-6 h-6 icon-stroke heart-icon group-hover:text-red-600 transition-colors duration-200"/>
@@ -113,8 +158,15 @@ import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } fro
 import { XMarkIcon, ChevronRightIcon } from '@heroicons/vue/24/outline';
 import { defineProps, defineEmits, ref } from 'vue';
 import { getDataFromStore } from '~/mixins/MixinNavbarCategories.js';
-import {HeartIcon, ShoppingBagIcon, Squares2X2Icon} from "@heroicons/vue/24/outline/index.js";
+import {UserCircleIcon, HeartIcon, ShoppingBagIcon, Squares2X2Icon} from "@heroicons/vue/24/outline/index.js";
 import {useProductBasketStore} from "~/store/modals/basket.js";
+import {useAuthStore} from "~/store/user/auth.js";
+
+const authStore = useAuthStore();
+onBeforeMount(()=>{
+  authStore.userData();
+})
+
 
 defineProps({
   open: {
