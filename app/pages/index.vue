@@ -18,14 +18,16 @@
       </section>
     </div>
 
+    <div ref="htmlContainer"  v-html="content"></div>
   </div>
 </template>
 
 <script setup>
-import {ref, computed, onBeforeMount, onMounted, nextTick} from 'vue';
+import {ref, computed, onBeforeMount} from 'vue';
 
 import {getDataFromStore} from "~/mixins/MixinNavbarCategories.js";
-import {setPageLayout} from "#app";
+import {apiMethods} from "~/composables/api/methods/apiMethods.js";
+import {useHtmlRouterLinks} from "~/composables/content/useHtmlRouterLinks.ts";
 /*definePageMeta({
   middleware: ['redirect'],
 });*/
@@ -37,12 +39,19 @@ const config = useAppConfig();
 
 
 const categories = ref([]);
+const content = ref([]);
 
 onBeforeMount(async () => {
   const data = await getDataFromStore();
   categories.value = data.categoriesDropdown;
 
+  const response = await apiMethods.getPageContent('home');
+  content.value = response.data.content;
 });
+
+const htmlContainer = ref(null);
+
+useHtmlRouterLinks(htmlContainer, content);
 
 
 const sectionedCategories = computed(() => {
@@ -71,11 +80,12 @@ useHead({
     // { property: 'og:image', content: `${config.domain}/images/zooshop.jpg` },
   ],
 })
+
+
 </script>
 
 
 <style scoped>
-@import "assets/css/pages/home.css";
 
 
 </style>

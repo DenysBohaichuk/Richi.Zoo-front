@@ -8,8 +8,8 @@ import getApiService from "~/composables/api/services/getApiService.js";
 
 export const orderService = {
     async createOrder(payload) {
-        const { response, createData } = getApiService();
-        await createData(apiPath.create_order, payload);
+        const { response, postData } = getApiService();
+        await postData(apiPath.create_order, payload);
         return responseFormat.response(response.value);
     }
 };

@@ -1,26 +1,33 @@
 // stores/categoryStore.js
 import { defineStore } from 'pinia';
 import {apiMethods} from "~/composables/api/methods/apiMethods.js";
-import {useModalInfoStore} from "~/store/modals/info.js";
 
 export const useNavbarStore = defineStore('navbar', {
     state: () => ({
         categoriesDropdown: null,
+        isLoading: false,
     }),
     actions: {
         async getCategoriesDropdown(){
-            const modalInfoStore = useModalInfoStore();
-
+            if (this.isLoading) return
             try {
-                this.categoriesDropdown = await apiMethods.getListCategories();
+                this.isLoading = true;
 
-                if (!this.categoriesDropdown.status) {
-                    const errorMessage = this.categoriesDropdown.message || 'Error fetching categories';
+
+                const res = await apiMethods.getListCategories();
+
+
+                if (!res.status) {
+                    const errorMessage = res.message || 'Error fetching categories';
                     console.log(errorMessage)
-                 //  modalInfoStore.openModal(false, errorMessage);
+                } else {
+                    this.categoriesDropdown = res || []
+                    this.isLoading = false
                 }
             } catch (error) {
                 console.log(error.message);
+            } finally {
+                this.isLoading = false;
             }
         },
     }

@@ -17,10 +17,19 @@ export const authModule = {
         return await AuthService.verifyEmail(token);
     },
 
-    async login(user) {
+/*    async login(user) {
         const resp = await AuthService.login(user);
         if (resp && resp.status) {
             this.userLogin(resp.data.token);
+        }
+        return resp;
+    },*/
+    async login(credentials) {
+        const resp = await AuthService.login(credentials);
+        if (resp?.status) {
+            // після цього дістанемо user з /auth/me
+            await useAuthStore().init();
+            useAuthStore().isLoggedIn = true;
         }
         return resp;
     },
@@ -28,17 +37,10 @@ export const authModule = {
     async googleAuth(user) {
         const resp = await AuthService.googleAuth(user);
         if (resp && resp.status) {
-            this.userLogin(resp.data.token);
+            await useAuthStore().init();
         }
         return resp;
     },
-
-    userLogin(userToken) {
-        localStorage.setItem('loggedIn', 'true');
-        localStorage.setItem('userToken', JSON.stringify(userToken));
-        useAuthStore().userData();
-    },
-
 
 };
 

@@ -1,24 +1,42 @@
 // store/modals/user/auth.js
-import { defineStore } from 'pinia';
-import {parseJwt} from "~/utils/jwt.js";
+import {defineStore} from 'pinia';
+import apiPath from "~/composables/api/endpoints/apiPaths.js";
+import getApiService from "~/composables/api/services/getApiService.js";
 
 export const useAuthStore  = defineStore('auth', {
     state: () => ({
         isLoggedIn: false,
         user: null,
-        userToken: null
     }),
     actions: {
-        userData() {
-            this.isLoggedIn = window.localStorage.getItem('loggedIn') === 'true';
-            this.userToken = JSON.parse(window.localStorage.getItem('userToken')) || null;
-            this.user = this.userToken ? parseJwt(this.userToken) : null;
+        /**
+         * Ініціалізуємо сесію: пробуємо отримати /auth/me.
+         */
+        async init() {
+            const { fetchData, response } = getApiService();
+            await fetchData(`${apiPath.me}`);
+
+            if(response.value?.status) {
+                this.user = response.value.data;
+                console.log('login true')
+
+                this.isLoggedIn = true;
+            } else {
+                this.user = null;
+                this.isLoggedIn = false;
+            }
         },
-        logout(){
-            localStorage.setItem('loggedIn', 'false');
-            localStorage.removeItem('userToken');
+
+        /**
+         * Логаут: дзвонимо в /auth/logout,
+         * браузер очистить кукі, а ми оновимо стан.
+         */
+        async logout() {
+            const { postData } = getApiService();
+
+            await postData(`${apiPath.logout}`);
+            this.user = null;
             this.isLoggedIn = false;
-            this.userToken = null;
-        }
+        },
     }
 });

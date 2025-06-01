@@ -4,9 +4,9 @@ import getApiService from "~/composables/api/services/getApiService.js";
 
 class AuthService {
     async signup(user) {
-        const { response, createData } = getApiService();
+        const { response, postData } = getApiService();
 
-        await createData(apiPath.signup, {
+        await postData(apiPath.signup, {
             email: user.email,
             name: user.name,
             surname: user.surname,
@@ -17,9 +17,9 @@ class AuthService {
     }
 
     async login(user) {
-        const { response, createData } = getApiService();
+        const { response, postData } = getApiService();
 
-        await createData(
+        await postData(
             apiPath.login,
             {
                 email: user.email,
@@ -30,9 +30,9 @@ class AuthService {
     }
 
     async googleAuth(user) {
-        const { response, createData } = getApiService();
+        const { response, postData } = getApiService();
 
-        await createData(apiPath.google, {}, user.GISToken ? { 'GISToken': user.GISToken } : null);
+        await postData(apiPath.google, {}, user.GISToken ? { 'GISToken': user.GISToken } : null);
         return responseFormat.response(response.value);
     }
 }

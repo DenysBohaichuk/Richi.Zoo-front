@@ -11,8 +11,14 @@ export default function useAuth() {
 
     const handleCredentialResponse = async (response) => {
 
+
         const responsePayload = parseJwt(response.credential);
-        if (responsePayload) {
+
+        if (!responsePayload) {
+            errorMessage.value = 'Помилка декодування Google JWT';
+            return { success: false };
+        }
+
             user.value = {
                 email: responsePayload.email,
                 google_id: responsePayload.sub, // Google ID
@@ -24,17 +30,15 @@ export default function useAuth() {
 
             const responseAuth = await authModule.googleAuth(user.value);
 
-            if (responseAuth.status) {
-                await navigateTo('/');
-            } else {
-                modalInfoStore.openModal(
+            if (!responseAuth.status) {
+                await modalInfoStore.openModal(
                     responseAuth.status,
                     await responseFormat.response(responseAuth.error.message)
                 );
             }
-        } else {
-            errorMessage.value = 'Помилка декодування Google JWT';
-        }
+            return { success: responseAuth.status };
+
+
     };
 
     return { user, errorMessage, handleCredentialResponse };

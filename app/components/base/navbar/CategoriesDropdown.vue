@@ -3,7 +3,7 @@
     <div class="bg-white">
       <div class="mx-auto max-w-7xl">
         <div
-            class="inline-flex items-center px-6 py-5 gap-x-1 text-gray-900 hover:bg-gray-100 cursor-pointer"
+            class="inline-flex items-center px-6 py-5 gap-x-1 text-gray-900 hover:text-azure cursor-pointer"
             @mouseenter="delayedOpenPanel"
             @mouseleave="cancelOpenPanel"
         >
@@ -14,12 +14,7 @@
     </div>
 
     <transition
-        enter-active-class="transition transform ease-out duration-200"
-        enter-from-class="opacity-0 -translate-y-4"
-        enter-to-class="opacity-100 translate-y-0"
-        leave-active-class="transition transform ease-in duration-150"
-        leave-from-class="opacity-100 translate-y-0"
-        leave-to-class="opacity-0 -translate-y-4"
+        name="fade-slide"
     >
       <div
           v-show="isPanelOpen"
@@ -151,7 +146,7 @@ function delayedOpenPanel() {
   if (closeTimeout) clearTimeout(closeTimeout);
   openTimeout = setTimeout(() => {
     isPanelOpen.value = true;
-  }, 200); // Затримка в 200 мс перед відкриттям
+  }, 100); // Затримка в 200 мс перед відкриттям
 }
 
 function cancelOpenPanel() {
@@ -164,7 +159,7 @@ function delayedClosePanel() {
   if (openTimeout) clearTimeout(openTimeout);
   closeTimeout = setTimeout(() => {
     isPanelOpen.value = false;
-  }, 200); // Затримка в 200 мс для плавного закриття
+  }, 100); // Затримка в 200 мс для плавного закриття
 }
 
 function cancelClosePanel() {
@@ -191,3 +186,20 @@ const clearActiveSubcategory = () => {
   activeSubcategory.value = null;
 };
 </script>
+
+<style scoped>
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>

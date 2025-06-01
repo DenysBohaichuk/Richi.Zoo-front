@@ -1,0 +1,201 @@
+/* ===================================================================
+   Text Colors
+   =================================================================== */
+.text-dark {
+    color: #222;
+}
+
+.text-gray {
+    color: #555;
+}
+
+/* ===================================================================
+   Section Background & Rounded Corners
+   =================================================================== */
+.section-bg {
+    background-color: #fff;
+    padding: 40px;
+    margin-top: 30px;
+}
+
+.rounded-corners {
+    border-radius: 12px;
+}
+
+/* ===================================================================
+   Hero Section
+   =================================================================== */
+.hero-section {
+    position: relative;
+    overflow: hidden;
+    border: 3px solid #007BFF;
+    min-height: 360px;
+}
+
+.hero-section video,
+.hero-section img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-section .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+}
+
+/* ===================================================================
+   Section Titles
+   =================================================================== */
+.section-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* ===================================================================
+   Card Background & Hover Effects
+   =================================================================== */
+.card-bg {
+    background-color: #fafafa;
+    border-radius: 8px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-bg:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ===================================================================
+   History List
+   =================================================================== */
+.section-bg ul {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 800px;
+}
+
+.section-bg ul li {
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+/* ===================================================================
+   Values & Team Sections
+   =================================================================== */
+.values-list,
+.team-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.values-list .card-bg,
+.team-list .card-bg {
+    flex: 1 1 calc(33.333% - 20px);
+    text-align: center;
+}
+
+.team-list .card-bg img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+/* ===================================================================
+   Testimonials Section
+   =================================================================== */
+.testimonials-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.testimonial-card {
+    flex: 1 1 calc(33.333% - 20px);
+    background-color: #fafafa;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.testimonial-card p {
+    font-style: italic;
+    margin-bottom: 10px;
+    color: #222;
+}
+
+.testimonial-card cite {
+    display: block;
+    font-size: 0.875rem;
+    text-align: right;
+    color: #777;
+}
+
+/* ===================================================================
+   Brands Section
+   =================================================================== */
+.brands-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+}
+
+.brand-item {
+    flex: 1 1 150px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* ===================================================================
+   Buttons & Links
+   =================================================================== */
+.hero-button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: #007BFF;
+    color: #222;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.hero-button:hover {
+    background-color: #0056b3;
+}
+
+/* ===================================================================
+   Responsive Breakpoints
+   =================================================================== */
+@media (max-width: 768px) {
+.values-list .card-bg,
+.team-list .card-bg,
+.testimonial-card {
+        flex: 1 1 100%;
+    }
+}

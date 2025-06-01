@@ -1,40 +1,59 @@
-<!-- components/IsAuthUser.vue -->
 <script setup lang="ts">
-import { useAuthStore } from "~/store/user/auth";
+import { computed, ref, watch, onBeforeMount } from 'vue'
+import { useAuthStore } from '~/store/user/auth'
+import { navigateTo } from '#app'
 
 const props = defineProps({
-  redirectPath: {
-    type: String,
-    default: '/', // Шлях для редиректу за замовчуванням
-  },
-  requireAuth: {
-    type: Boolean,
-    default: true, // If true, requires user to be authenticated; if false, requires user to be unauthenticated
-  },
-});
+  redirectPath: { type: String, default: '/' },
+  requireAuth:   { type: Boolean, default: true },
+})
 
-const authStore = useAuthStore();
-const isReady = ref(false);
+const authStore = useAuthStore()
+const isReady = ref(false)
 
-onBeforeMount(() => {
-  authStore.userData();
-  const isLoggedIn = authStore.isLoggedIn;
-
-  // Redirect logic based on requireAuth prop and authentication state
-  if (props.requireAuth && !isLoggedIn) {
-    navigateTo(props.redirectPath); // Redirect if auth is required but user is not logged in
-  } else if (!props.requireAuth && isLoggedIn) {
-    navigateTo(props.redirectPath); // Redirect if auth is not required but user is logged in
+onBeforeMount(async () => {
+  if (!authStore.isLoggedIn){
+  await authStore.init()
   }
+  isReady.value = true
+})
 
-  isReady.value = true;
-});
+// Редірект (якщо потрібно)
+watch(
+    [() => authStore.isLoggedIn, () => isReady.value],
+    ([logged, ready]) => {
+      if (!ready) return; // чекаємо завершення init()
 
+      console.log('redirect component')
+      if (props.requireAuth && !logged) {
+        navigateTo(props.redirectPath)
+      } else if (!props.requireAuth && logged) {
+        navigateTo(props.redirectPath)
+      }
+    },
+    { immediate: true }
+)
+
+const canShowSlot = computed(() =>
+    props.requireAuth
+        ? authStore.isLoggedIn
+        : !authStore.isLoggedIn
+)
 </script>
 
 <template>
-  <div v-if="isReady && (props.requireAuth ? authStore.isLoggedIn : !authStore.isLoggedIn)">
-    <slot />
+  <!-- Поки не isReady — показуємо завантаження -->
+  <div v-if="!isReady">Loading...</div>
+
+  <!-- Коли готові — тримаємо в DOM і слот, і фолбек -->
+  <div v-else>
+    <!-- Сама форма: накопичуємо слот, але ховаємо через CSS -->
+    <div v-show="canShowSlot">
+      <slot />
+    </div>
+    <!-- Фолбек-стан, коли умова false -->
+    <div v-show="!canShowSlot">
+      Loading...
+    </div>
   </div>
-  <div v-else>Loading...</div>
 </template>

@@ -54,10 +54,7 @@ const props = defineProps({
   },
 });
 
-//отримання категорій для NavBar та SideBar
-if(!useNavbarStore().categoriesDropdown) {
-  await useNavbarStore().getCategoriesDropdown();
-}
+
 
 const {waitLoadPage} = useLoading();
 const searchComponent = useSearchComponentStore();

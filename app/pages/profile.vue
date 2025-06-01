@@ -1,33 +1,30 @@
 <template>
   <BaseUserIsAuthUser redirect-path="/login">
     <div class="min-h-screen bg-gray-50 flex flex-col">
-      <!-- Контейнер із відступами -->
       <div class="container mx-auto py-8 px-4 sm:px-6 lg:px-8 flex-1">
-        <!-- Заголовок -->
         <h1 class="text-2xl sm:text-3xl font-semibold mb-6 text-gray-900">
           {{ $t('profile.title') }}
         </h1>
 
         <!-- Вкладки -->
-        <!-- Для десктопу: горизонтальні вкладки -->
         <div class="hidden sm:flex border-b border-gray-200 mb-6">
           <NuxtLink
               v-for="tab in tabs"
               :key="tab.id"
               :to="{ query: { tab: tab.id } }"
               :class="[
-            'px-4 py-2 text-base font-medium whitespace-nowrap',
-            activeTab === tab.id
-              ? 'border-b-2 border-azure text-azure'
-              : 'text-gray-500 hover:text-gray-700'
-          ]"
+              'px-4 py-2 text-base font-medium whitespace-nowrap',
+              activeTab === tab.id
+                ? 'border-b-2 border-azure text-azure'
+                : 'text-gray-500 hover:text-gray-700'
+            ]"
               :aria-label="`Перейти до вкладки ${tab.name}`"
           >
             {{ tab.name }}
           </NuxtLink>
         </div>
 
-        <!-- Для мобілки: випадаючий список -->
+        <!-- Для мобілки: select -->
         <div class="sm:hidden mb-6">
           <label for="tab-select" class="block text-sm font-medium text-gray-700 mb-2">
             {{ $t('profile.selectSection') }}
@@ -46,7 +43,7 @@
 
         <!-- Вміст вкладок -->
         <div class="tab-content flex-1">
-          <!-- Вкладка: Особисті дані -->
+          <!-- --- Вкладка: Особисті дані --- -->
           <div v-if="activeTab === 'personal'" class="space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
@@ -110,7 +107,7 @@
                   {{ $t('profile.personal.save') }}
                 </button>
                 <button
-                    @click="isEditing = false"
+                    @click="cancelEdit"
                     class="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 transition-colors duration-200 w-full sm:w-auto"
                 >
                   {{ $t('profile.personal.cancel') }}
@@ -119,7 +116,7 @@
             </div>
           </div>
 
-          <!-- Вкладка: Мої замовлення -->
+          <!-- --- Вкладка: Мої замовлення --- -->
           <div v-if="activeTab === 'orders'" class="space-y-4">
             <div v-if="orders.length === 0" class="text-gray-500 text-center py-6">
               {{ $t('profile.orders.empty') }}
@@ -154,7 +151,7 @@
             </div>
           </div>
 
-          <!-- Вкладка: Налаштування -->
+          <!-- --- Вкладка: Налаштування --- -->
           <div v-if="activeTab === 'settings'" class="space-y-6">
             <div class="space-y-6">
               <!-- Зміна пароля -->
@@ -196,8 +193,8 @@
                       class="h-4 w-4 text-azure border-gray-300 rounded focus:ring-azure"
                   />
                   <span class="ml-2 text-sm text-gray-700">
-                  {{ $t('profile.settings.emailNotifications') }}
-                </span>
+                    {{ $t('profile.settings.emailNotifications') }}
+                  </span>
                 </label>
               </div>
               <button
@@ -219,7 +216,7 @@
             </div>
           </div>
 
-          <!-- Вкладка: Мої відгуки -->
+          <!-- --- Вкладка: Мої відгуки --- -->
           <div v-if="activeTab === 'reviews'" class="space-y-4">
             <div v-if="reviews.length === 0" class="text-gray-500 text-center py-6">
               {{ $t('profile.reviews.empty') }}
@@ -253,7 +250,7 @@
             </div>
           </div>
 
-          <!-- Вкладка: Бонуси/знижки -->
+          <!-- --- Вкладка: Бонуси/знижки --- -->
           <div v-if="activeTab === 'bonuses'" class="space-y-6">
             <div class="space-y-6">
               <div>
@@ -299,10 +296,11 @@
 </template>
 
 <script setup>
-import {ref, onMounted, watch, onBeforeUnmount} from 'vue';
-import {useAuthStore} from '~/store/user/auth.js';
-import {useI18n} from 'vue-i18n';
-import {useRoute, useRouter} from 'vue-router';
+import { ref, onMounted, watch, onBeforeUnmount } from 'vue';
+import { useAuthStore } from '~/store/user/auth.js';
+import { useI18n } from 'vue-i18n';
+import { useRoute, useRouter } from 'vue-router';
+import { apiMethods } from '~/composables/api/methods/apiMethods.js';
 
 definePageMeta({
   middleware: 'is-auth',
@@ -310,58 +308,116 @@ definePageMeta({
 });
 
 const authStore = useAuthStore();
-const {t} = useI18n();
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 
 // Вкладки
 const tabs = ref([]);
 const activeTab = ref('personal');
-let isOnProfilePage = ref(true); // Відстежуємо, чи ми на сторінці профілю
+let isOnProfilePage = ref(true);
 
-onMounted(() => {
-  // Перевірка авторизації
-  if (!authStore.isLoggedIn) {
-    router.push('/login');
-    return;
+// Дані користувача та стани
+const userData = ref({
+  id: null,
+  name: '',
+  surname: '',
+  email: '',
+  phone: '',
+  bio: '',
+  avatar: ''  // URL або шлях
+});
+const isEditing = ref(false);
+
+// Замовлення, відгуки, бонуси (поки що можна ставити порожні масиви — можна потім окремо запитувати)
+const orders = ref([]);
+const reviews = ref([]);
+const bonuses = ref({ points: 0 });
+const promoCodes = ref([]);
+
+const passwordData = ref({
+  currentPassword: '',
+  newPassword: '',
+  newPasswordConfirmation: ''
+});
+const settingsData = ref({
+  emailNotifications: true
+});
+
+// Отримати дані профілю
+const fetchProfile = async () => {
+  try {
+    const response = await apiMethods.getProfile();
+    // Приклад відповіді: { data: { user: { id, name, surname, email, phone, bio, avatar, … } } }
+    const user = response.data;
+
+    // Заповнюємо реактивну змінну
+    userData.value = {
+      id: user.id,
+      name: user.name || '',
+      surname: user.surname || '',
+      email: user.email || '',
+      phone: user.phone || '',
+      bio: user.bio || '',
+      avatar: user.avatar ? `/storage/${user.avatar}` : ''  // якщо в базі зберігається шлях у storage/app/public
+    };
+
+    // Якщо у відповіді були також orders / reviews / bonuses / promoCodes:
+    if (response.data.orders) {
+      orders.value = response.data.orders;
+    }
+    if (response.data.reviews) {
+      reviews.value = response.data.reviews;
+    }
+    if (response.data.bonuses) {
+      bonuses.value = response.data.bonuses;
+    }
+    if (response.data.promoCodes) {
+      promoCodes.value = response.data.promoCodes;
+    }
+  } catch (error) {
+    console.error('Не вдалося отримати профіль:', error);
+    // Якщо отримали 401 або 403, можна примусово логаутитись:
+    if (error.statusCode === 401 || error.statusCode === 403) {
+      authStore.logout();
+      router.push('/login');
+    }
   }
+};
 
-  // Ініціалізуємо вкладки
+onMounted(async () => {
+  // Якщо потребуєте додаткової перевірки authStore.isLoggedIn, розкоментуйте:
+  // if (!authStore.isLoggedIn) { router.push('/login'); return; }
+  await fetchProfile();
+
   tabs.value = [
     {id: 'personal', name: t('profile.tabs.personal')},
     {id: 'orders', name: t('profile.tabs.orders')},
     {id: 'settings', name: t('profile.tabs.settings')},
     {id: 'reviews', name: t('profile.tabs.reviews')},
-    {id: 'bonuses', name: t('profile.tabs.bonuses')},
+    {id: 'bonuses', name: t('profile.tabs.bonuses')}
   ];
 
-  // Отримуємо активну вкладку з URL
   const tabFromUrl = route.query.tab;
-  if (tabFromUrl && tabs.value.some(tab => tab.id === tabFromUrl)) {
+  if (tabFromUrl && tabs.value.some((tab) => tab.id === tabFromUrl)) {
     activeTab.value = tabFromUrl;
   }
 });
 
-// Оновлення URL лише якщо ми на сторінці профілю
 watch(activeTab, (newTab) => {
   if (isOnProfilePage.value) {
     router.push({query: {tab: newTab}});
   }
 });
 
-// Оновлення activeTab при зміні URL
-watch(
-    () => route.query.tab,
-    (newTab) => {
-      if (newTab && tabs.value.some(tab => tab.id === newTab)) {
-        activeTab.value = newTab;
-      } else {
-        activeTab.value = 'personal'; // За замовчуванням
-      }
-    }
-);
+watch(() => route.query.tab, (newTab) => {
+  if (newTab && tabs.value.some((tab) => tab.id === newTab)) {
+    activeTab.value = newTab;
+  } else {
+    activeTab.value = 'personal';
+  }
+});
 
-// Відстежуємо зміну маршруту
 watch(
     () => route.path,
     (newPath) => {
@@ -372,79 +428,96 @@ watch(
     }
 );
 
-// Очищаємо параметри при знищенні компонента
 onBeforeUnmount(() => {
   isOnProfilePage.value = false;
   router.replace({query: {}});
 });
 
-// Оновлення URL при виборі вкладки з випадаючого списку
+// Оновлення вкладок через select
 const updateTabFromSelect = () => {
   router.push({query: {tab: activeTab.value}});
 };
 
-// Функція виходу з акаунту
+// Функція виходу
 const logout = async () => {
   try {
-    // Очищаємо токен і стан авторизації у authStore
     await authStore.logout();
-    // Перенаправляємо на сторінку входу
     router.push('/login');
-  } catch (error) {
-    console.error('Помилка при виході:', error);
+  } catch (e) {
+    console.error('Помилка при логауті:', e);
   }
 };
 
-// Дані користувача (приклад)
-const userData = ref({
-  name: 'Іван',
-  surname: 'Петренко',
-  email: 'ivan@example.com',
-  phone: '+380 123 456 789',
-});
-const isEditing = ref(false);
-
-// Дані для вкладок (приклад)
-const orders = ref([
-  {id: 1234, date: '15.03.2025', status: 'Доставлено', total: 1500},
-  {id: 1233, date: '10.03.2025', status: 'В обробці', total: 800},
-]);
-const reviews = ref([
-  {id: 1, product: 'Корм для котів 1кг', date: '10.03.2025', rating: 4, comment: 'Дуже хороший корм!'},
-  {id: 2, product: 'Іграшка для собак', date: '05.03.2025', rating: 5, comment: 'Собака в захваті!'},
-]);
-const bonuses = ref({
-  points: 150,
-});
-const promoCodes = ref([
-  {id: 1, code: 'SAVE10', discount: 10, expires: '31.12.2025'},
-  {id: 2, code: 'PET20', discount: 20, expires: '15.06.2025'},
-]);
-const passwordData = ref({
-  currentPassword: '',
-  newPassword: '',
-});
-const settingsData = ref({
-  emailNotifications: true,
-});
-
-// Функції для взаємодії
+// Збереження профілю
 const saveProfile = async () => {
-  console.log('Збережено:', userData.value);
+  try {
+    // Формуємо обʼєкт для оновлення
+    const payload = {
+      name: userData.value.name,
+      surname: userData.value.surname,
+      email: userData.value.email,
+      phone: userData.value.phone,
+      bio: userData.value.bio
+    };
+    await apiMethods.updateProfile(payload);
+
+    // Після успіху — забираємо режим редагування
+    isEditing.value = false;
+    // Перезапитуємо профіль, щоб отримати найновіші дані (наприклад, змінився avatar)
+    await fetchProfile();
+  } catch (error) {
+    console.error('Помилка при збереженні профілю:', error);
+  }
+};
+
+// Скасувати редагування — просто відкат до початкових значень
+const cancelEdit = () => {
   isEditing.value = false;
+  fetchProfile();
 };
 
+// Зміна пароля
 const changePassword = async () => {
-  console.log('Змінено пароль:', passwordData.value);
-  passwordData.value = {currentPassword: '', newPassword: ''};
+  try {
+    await apiMethods.changePassword({
+      current_password: passwordData.value.currentPassword,
+      new_password: passwordData.value.newPassword,
+      new_password_confirmation: passwordData.value.newPasswordConfirmation
+    });
+    // Очистимо поля після успіху
+    passwordData.value = {
+      currentPassword: '',
+      newPassword: '',
+      newPasswordConfirmation: ''
+    };
+    alert(t('profile.settings.passwordChanged')); // або показати toast
+  } catch (error) {
+    console.error('Помилка при зміні пароля:', error);
+    // Можна показати повідомлення користувачу
+    if (error.statusCode === 422) {
+      alert(error.data.error.message || 'Помилка валідації');
+    }
+  }
 };
 
+// Збереження налаштувань (наприклад, прапорець emailNotifications)
+// Якщо бекенд не підтримує окремий ендпоінт, можна реалізувати аналогічно через updateProfile
 const saveSettings = async () => {
-  console.log('Збережено налаштування:', settingsData.value);
+  try {
+    // Якщо ви мають окремий ендпоінт для налаштувань, викликайте його
+    // але якщо налаштування зберігаються в тій же моделі User, можна передавати частину полів через updateProfile:
+    await apiMethods.updateProfile({
+      email_notifications: settingsData.value.emailNotifications
+    });
+    alert(t('profile.settings.saved'));
+  } catch (error) {
+    console.error('Не вдалося зберегти налаштування:', error);
+  }
 };
 
+// Видалити відгук
 const deleteReview = (id) => {
-  reviews.value = reviews.value.filter(review => review.id !== id);
+  reviews.value = reviews.value.filter((review) => review.id !== id);
 };
 </script>
 

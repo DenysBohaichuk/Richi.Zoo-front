@@ -53,6 +53,12 @@ export default defineNuxtConfig({
     css: [
         '~/assets/css/main.css',
         '~/assets/css/mountains_background.css',
+
+        // Pages
+        '~/assets/css/pages/home.css',
+        '~/assets/css/pages/about_us.css',
+        '~/assets/css/pages/contacts.css'
+
     ],
 
     experimental: {
@@ -64,7 +70,7 @@ export default defineNuxtConfig({
         compatibilityVersion: 4,
     },
 
-    compatibilityDate: '2024-08-14'
+    compatibilityDate: '2024-08-14',
 
 
 })

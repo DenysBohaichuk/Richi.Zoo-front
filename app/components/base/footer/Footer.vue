@@ -3,9 +3,9 @@ import {ref} from "vue";
 import {getDataFromStore} from "~/mixins/MixinNavbarCategories";
 
 const categories = ref([]);
+console.log(2)
 const data = await getDataFromStore();
 categories.value = data.categoriesDropdown;
-console.log(categories.value)
 </script>
 
 <template>

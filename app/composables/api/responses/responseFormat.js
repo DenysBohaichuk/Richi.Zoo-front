@@ -4,9 +4,13 @@
 
 export const responseFormat = {
     response(struct) {
+        if (struct == null || typeof struct !== 'object') {
+            console.warn('[responseFormat] отримано не-обʼєкт:', struct);
+            return struct;
+        }
+
         if (Object.prototype.hasOwnProperty.call(struct, 'response')) {
             const responseData = struct.response.data;
-            console.log(2)
 
             // Check if error.message is present and is not just a string
             if (responseData.error && typeof responseData.error.message === 'object') {
@@ -16,11 +20,9 @@ export const responseFormat = {
             }
             return responseData;
         } else if (Object.prototype.hasOwnProperty.call(struct, 'status')) {
-            console.log(1)
 
             return struct;
         }
-        console.log(3)
         return struct;
     }
 };

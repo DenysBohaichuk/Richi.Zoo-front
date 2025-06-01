@@ -3,8 +3,11 @@ const apiPaths = {
     signup: '/auth/signup',
     verify_email: '/auth.vue/verify-email?token=',
     login: '/auth/login',
+    logout: '/auth/logout',
+    refreshToken: '/auth/token/refresh',
+    me: '/auth/me',
 
-    category: '/categories/get-category/',
+    category: '/categories/get-category/', //and add slug
     categories: '/categories/get-list-categories',
 
     products: '/products/get-product',
@@ -12,7 +15,13 @@ const apiPaths = {
 
     delivery_methods: '/delivery-methods',
 
-    create_order: '/create-order'
+    create_order: '/create-order',
+
+    user: '/user',
+    userAvatar: '/user/avatar',
+    userPassword: '/user/password',
+
+    page_content: '/pages/', //and add slug
 };
 
 export default apiPaths;

@@ -164,7 +164,7 @@ import {useAuthStore} from "~/store/user/auth.js";
 
 const authStore = useAuthStore();
 onBeforeMount(()=>{
-  authStore.userData();
+  // authStore.init();
 })
 
 
@@ -189,8 +189,11 @@ function  handleSidebarCloseAndOpenBasketModal(){
 
 // Завантаження категорій з магазину
 const categories = ref([]);
-const data = await getDataFromStore();
-categories.value = data.categoriesDropdown;
+onMounted(async () => {
+  const data = await getDataFromStore();
+  categories.value = data.categoriesDropdown;
+});
+
 
 // Стан для керування напрямком анімації та категоріями
 const showCategories = ref(false);

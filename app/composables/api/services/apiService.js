@@ -1,4 +1,7 @@
 import { ref } from 'vue';
+import {useRouter} from 'vue-router'
+import { useAuthStore } from "~/store/user/auth.js";
+import {responseFormat} from "~/composables/api/responses/responseFormat.js";
 
 const networkErr = { status: false, error: { message: "Немає з'єднання з сервером." }};
 const undefinedErr = { status: false, error: { message: "Невідома помилка." }};
@@ -7,11 +10,41 @@ export default function apiService(apiClient) {
     const response = ref(null);
     const data = ref(null);
     const isLoading = ref(false);
+     const router = useRouter();
+     const authStore = useAuthStore();
 
-    const fetchData = async (path) => {
+    async function requestWithRefresh(requestFn) {
+        try {
+            return await requestFn();
+        } catch (err) {
+            // якщо 401 – спробуємо оновити токен
+            if (err.response?.status === 401 && authStore.refreshToken) {
+                try {
+                    const r = await apiClient.post('/auth/refresh', {
+                        refresh_token: authStore.refreshToken
+                    });
+                    authStore.setTokens(r.data.access_token, r.data.refresh_token);
+                    // повторимо оригінальний запит вже з новим токеном
+                    return await requestFn();
+                } catch {
+                    // якщо refresh не вдався – логаут
+                    authStore.logout();
+                    router.push({ name: 'login' });
+                    return;
+                }
+            }
+            return { status: false, data: null, error: { message: err.message } }
+        }
+    }
+
+
+    const fetchData = async (path, headers = {}) => {
         isLoading.value = true;
         try {
-            const resp = await apiClient.get(path);
+            const resp = await requestWithRefresh(() =>
+                apiClient.get(path, { headers: headers })
+            );
+
             response.value = resp.data;
             data.value = resp.data;
         } catch (err) {
@@ -19,18 +52,41 @@ export default function apiService(apiClient) {
             if (err.message === "Network Error") {
                 response.value = networkErr;
             } else {
-                response.value = undefinedErr;
+                response.value = err;
             }
         } finally {
             isLoading.value = false;
         }
     };
 
-    const createData = async (path, payload, headers = {}) => {
+    const postData = async (path, payload, headers = {}) => {
         isLoading.value = true;
         try {
-            const headersRequest = headers.token ? { 'Authorization': `Bearer ${headers.token}` } : headers;
-            const resp = await apiClient.post(path, payload, { headers: headersRequest });
+
+            const resp = await requestWithRefresh(() =>
+                apiClient.post(path, payload, { headers: headers })
+            );
+            response.value = resp.data;
+            data.value = resp.data;
+        } catch (err) {
+
+            if (err.message === "Network Error") {
+                response.value = networkErr;
+            } else {
+                response.value = err;
+            }
+        } finally {
+            isLoading.value = false;
+        }
+    };
+
+    const updateData = async (path, payload, headers = {}) => {
+        isLoading.value = true;
+        try {
+
+            const resp = await requestWithRefresh(() =>
+                apiClient.put(path, payload, { headers: headers })
+            );
             response.value = resp.data;
             data.value = resp.data;
         } catch (err) {
@@ -44,10 +100,13 @@ export default function apiService(apiClient) {
         }
     };
 
-    const updateData = async (path, payload) => {
+    const deleteData = async (path, headers = {}) => {
         isLoading.value = true;
         try {
-            const resp = await apiClient.put(path, payload);
+
+            const resp = await requestWithRefresh(() =>
+                apiClient.delete(path, { headers: headers })
+            );
             response.value = resp.data;
             data.value = resp.data;
         } catch (err) {
@@ -61,22 +120,5 @@ export default function apiService(apiClient) {
         }
     };
 
-    const deleteData = async (path) => {
-        isLoading.value = true;
-        try {
-            const resp = await apiClient.delete(path);
-            response.value = resp.data;
-            data.value = resp.data;
-        } catch (err) {
-            if (err.message === "Network Error") {
-                response.value = networkErr;
-            } else {
-                response.value = err;
-            }
-        } finally {
-            isLoading.value = false;
-        }
-    };
-
-    return { response, data, isLoading, fetchData, createData, updateData, deleteData };
+    return { response, data, isLoading, fetchData, postData, updateData, deleteData };
 }

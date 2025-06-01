@@ -8,6 +8,8 @@ import {categoryService} from "~/composables/api/services/category/categoryServi
 import {productService} from "~/composables/api/services/product/productService.js";
 import {deliveryMethodsService} from "~/composables/api/services/delivery_methods/deliveryMethodsService.js";
 import {orderService} from "~/composables/api/services/orders/orderService.js";
+import {userService} from "~/composables/api/services/user/userService.js";
+import {pageService} from "~/composables/api/services/pages/pageService.js";
 
 export const apiMethods = {
     /**
@@ -71,5 +73,19 @@ export const apiMethods = {
      */
     async createOrder(payload){
         return await orderService.createOrder(payload);
-    }
+    },
+
+    /**
+     * Отримати дані юзера
+     */
+    async getProfile(){
+        return await userService.getProfile();
+    },
+
+    /**
+     * Отримання контенту для сторінки
+     */
+    async getPageContent(slug){
+        return await pageService.getContent(slug);
+    },
 }

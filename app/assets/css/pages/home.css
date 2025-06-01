@@ -29,3 +29,357 @@
         justify-content: center;
     }
 }
+
+
+
+/* ===================================================================
+   Text Colors
+   =================================================================== */
+.text-dark {
+    color: #222;
+}
+
+.text-gray {
+    color: #818181;
+}
+
+.text-white {
+    color: #ffffff;
+}
+
+/* ===================================================================
+   Section Backgrounds & Spacing
+   =================================================================== */
+.section-bg {
+    background-color: #fff;
+    padding: 40px;
+    margin-bottom: 30px;
+}
+
+.rounded-corners {
+    border-radius: 12px;
+}
+
+/* ===================================================================
+   Card Backgrounds
+   =================================================================== */
+.card-bg {
+    background-color: #fafafa;
+    padding: 20px;
+}
+
+.card-rounded {
+    border-radius: 8px;
+}
+
+/* ===================================================================
+   Hero Section
+   =================================================================== */
+.hero-section {
+    position: relative;
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-section .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.hero-title {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.hero-subtitle {
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+}
+
+.hero-button {
+    display: inline-block;
+    padding: 12px 24px;
+    --tw-bg-opacity: 1;
+    background-color: rgb(91 169 217 / var(--tw-bg-opacity, 1));
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+}
+
+.hero-button:hover {
+    background-color: #73BCD9;
+}
+
+/* ===================================================================
+   Transitions & Hover Effects
+   =================================================================== */
+.transition {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-zoom:hover {
+    transform: scale(1.03);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* ===================================================================
+   Animations
+   =================================================================== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in {
+    opacity: 0;
+    animation: fadeIn 0.6s ease forwards;
+}
+
+.animate-slide-up {
+    opacity: 0;
+    animation: slideUp 0.8s ease forwards;
+}
+
+/* ===================================================================
+   Categories Section
+   =================================================================== */
+.categories-section .section-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.categories-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.category-item {
+    flex: 1 1 calc(50% - 20px);
+    text-align: center;
+}
+
+.category-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.category-link {
+    display: block;
+    font-size: 1rem;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* ===================================================================
+   New Arrivals Section
+   =================================================================== */
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.product-card {
+    flex: 1 1 calc(33.333% - 20px);
+    padding: 20px;
+    text-align: center;
+}
+
+.product-img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.product-title {
+    font-size: 1.125rem;
+    margin: 10px 0 5px;
+}
+
+.product-desc {
+    font-size: 0.9375rem;
+    margin-bottom: 10px;
+}
+
+.product-button {
+    display: inline-block;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* ===================================================================
+   Offers Section
+   =================================================================== */
+.offers-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.offer-item {
+    padding: 15px;
+}
+
+/* ===================================================================
+   Why Us Section
+   =================================================================== */
+.features-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.feature-item {
+    flex: 1 1 calc(33.333% - 20px);
+    padding: 20px;
+    text-align: center;
+}
+
+.feature-title {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+}
+
+.feature-desc {
+    font-size: 1rem;
+}
+
+/* ===================================================================
+   Testimonials Section
+   =================================================================== */
+.home-testimonials .section-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.testimonial-item {
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.testimonial-item p {
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.testimonial-item footer {
+    font-size: 0.875rem;
+    text-align: right;
+}
+
+/* ===================================================================
+   Blog Section
+   =================================================================== */
+.blog-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.blog-card {
+    flex: 1 1 calc(50% - 20px);
+    padding: 20px;
+}
+
+.blog-title {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+}
+
+.blog-title a {
+    text-decoration: none;
+    font-weight: bold;
+    color: inherit;
+}
+
+.blog-desc {
+    font-size: 0.9375rem;
+}
+
+/* ===================================================================
+   Newsletter Section
+   =================================================================== */
+.newsletter-desc {
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.newsletter-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.newsletter-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.newsletter-button {
+    padding: 10px 20px;
+    --tw-bg-opacity: 1;
+    background-color: rgb(91 169 217 / var(--tw-bg-opacity, 1));
+    color: #222;
+    border: none;
+    cursor: pointer;
+}
+
+.newsletter-button:hover {
+    background-color: #73BCD9;
+}
+
+/* ===================================================================
+   Responsive Breakpoints
+   =================================================================== */
+@media (max-width: 768px) {
+    .product-card,
+    .feature-item,
+    .blog-card {
+        flex: 1 1 100%;
+    }
+
+    .category-item {
+        flex: 1 1 calc(100% - 20px);
+    }
+}

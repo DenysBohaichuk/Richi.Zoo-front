@@ -35,8 +35,8 @@ const category = ref([]);
 const subcategories = ref([]);
 
 
-const data = await getDataFromStore();
-onMounted(() => {
+onMounted(async () => {
+    const data = await getDataFromStore();
     breadcrumbs.value = data.breadcrumbs;
     products.value = data.products;
     filters.value = data.filters;

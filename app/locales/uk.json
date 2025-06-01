@@ -21,7 +21,9 @@
   },
 
   "navbar": {
-    "market": "Магазин",
+    "home": "Головна",
+    "about_us": "Про нас",
+    "contacts": "Контакти",
     "categories": "Каталог",
     "basket": "Кошик",
     "favorites": "Улюблене",

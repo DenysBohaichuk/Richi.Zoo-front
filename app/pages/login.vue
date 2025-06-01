@@ -20,7 +20,7 @@
             Вхід
           </button>-->
           <span class="text-gray-500 text-sm">{{ $t('auth.another_auth') }}</span>
-          <BaseButtonsGoogleSignInButton @signInStart="formSubmitted = true" @signInComplete="formSubmitted = false" class="h-8" />
+          <BaseButtonsGoogleSignInButton  @sign-in-start="formSubmitted = true" @sign-in-complete="formSubmitted = false" class="h-8" />
           <NuxtLink to="/signup" class="text-sm text-azure hover:underline">
             {{ $t('auth.login.register_link') }}
           </NuxtLink>
@@ -65,7 +65,6 @@ const {handleSubmit, errors} = useForm({
 const {value: emailValue, errorMessage: emailError} = useField('email', schema.fields.email);
 const {value: passValue, errorMessage: passError} = useField('password', schema.fields.password);
 
-
 const onSubmit = handleSubmit(async () => {
   startLoading();
 
@@ -76,6 +75,7 @@ const onSubmit = handleSubmit(async () => {
   let responseLogin = await apiMethods.login(payload);
 
   if (responseLogin.status) {
+    stopLoading();
     await navigateTo('/');
   } else {
     modalInfoStore.openModal(responseLogin.status, await responseFormat.response(responseLogin.error.message))

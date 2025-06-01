@@ -35,14 +35,15 @@
 import {HeartIcon, ShoppingBagIcon, Squares2X2Icon} from "@heroicons/vue/24/outline/index";
 import {useProductBasketStore} from "~/store/modals/basket.js";
 import {getDataFromStore} from "~/mixins/MixinNavbarCategories";
-import {useMobileMenuStore} from "~/store/components/mobileMenu.js";
 
 const productBasketStore = useProductBasketStore();
-const data = await getDataFromStore();
-const categories = ref([]);
-categories.value = data.categoriesDropdown;
 
-onMounted(() => {
+
+  const categories = ref([]);
+onMounted(async () => {
+  const data = await getDataFromStore();
+  categories.value = data.categoriesDropdown;
+
   const button = document.getElementById('central-button');
   const container = document.getElementById('central-button-container');
 
@@ -83,7 +84,6 @@ onMounted(() => {
   });
 });
 
-const menuVisibilityStore = useMobileMenuStore();
 
 
 </script>

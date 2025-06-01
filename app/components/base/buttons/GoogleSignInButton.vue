@@ -23,24 +23,30 @@
 <script setup>
 import { onMounted } from 'vue'
 import useAuth from '~/composables/api/services/user/auth/google/credentials.js'
+import {navigateTo} from "#app";
+import {useLoading} from "~/composables/auth/useLoading.js";
 
 const emits = defineEmits(['signInStart', 'signInComplete'])
 const { user, handleCredentialResponse } = useAuth()
 const googleClientId = useRuntimeConfig().public.GOOGLE_CLIENT_ID;
-const formSubmitted = ref(false);
+const { setLoading } = useLoading()
+
 
 const handleGoogleSignIn = async (response) => {
-  formSubmitted.value = true;
 
   emits('signInStart');
   try {
-    await handleCredentialResponse(response);
+    const { success } = await handleCredentialResponse(response);
     emits('signInComplete');
+    setLoading(false);
+    if (success) {
+      navigateTo('/');
+    }
   } catch (error) {
     console.error('Google Sign-In Error:', error);
     emits('signInComplete');
   }
-  formSubmitted.value = false;
+
 };
 
 onMounted(() => {

@@ -8,9 +8,11 @@
         </div>
       </div>
       <div class="flex w-full items-center nav-items">
-        <div class="flex grow gap-4 nav-action-buttons">
-<!--          <div>{{ $t('navbar.market') }}</div>-->
+        <div class="flex grow nav-action-buttons">
+          <NuxtLink to="/" class="inline-flex items-center px-6 py-5 gap-x-1 text-gray-900 hover:text-azure cursor-pointer">{{ $t('navbar.home') }}</NuxtLink>
           <BaseNavbarCategoriesDropdown>{{ $t('navbar.categories') }}</BaseNavbarCategoriesDropdown>
+          <NuxtLink to="/about" class="inline-flex items-center px-6 py-5 gap-x-1 text-gray-900 hover:text-azure cursor-pointer">{{ $t('navbar.about_us') }}</NuxtLink>
+          <NuxtLink to="/contacts" class="inline-flex items-center px-6 py-5 gap-x-1 text-gray-900 hover:text-azure cursor-pointer">{{ $t('navbar.contacts') }}</NuxtLink>
         </div>
         <!--      <div class="flex items-center gap-4">-->
         <div class="flex gap-4 justify-between mx-5">
@@ -76,8 +78,10 @@ const productBasketStore = useProductBasketStore();
 const searchComponent = useSearchComponentStore();
 const isDropdownOpen = ref(false);
 
-onBeforeMount(() => {
-  authStore.userData();
+onBeforeMount(async () => {
+  console.log('navbar')
+  await authStore.init();
+
   productBasketStore.getData();
 })
 
