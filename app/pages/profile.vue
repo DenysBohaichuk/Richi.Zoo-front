@@ -45,6 +45,34 @@
         <div class="tab-content flex-1">
           <!-- --- Вкладка: Особисті дані --- -->
           <div v-if="activeTab === 'personal'" class="space-y-6">
+
+            <!-- Блок аватара -->
+            <div class="flex flex-col items-center mb-6">
+              <div class="relative">
+                <img
+                    :src="userData.avatar || `~/assets/img/loader.gif`"
+                    alt="Avatar"
+                    class="h-24 w-24 rounded-full object-cover border-2 border-gray-200"
+                />
+                <!-- Кнопка "змінити" поверх картинки -->
+                <button
+                    v-if="isEditing"
+                    @click="triggerAvatarInput"
+                    class="absolute bottom-0 right-0 bg-azure text-white rounded-full p-1 hover:bg-cerulean transition-colors"
+                    aria-label="Змінити аватар"
+                >
+                  ✎
+                </button>
+              </div>
+              <input
+                  ref="avatarInput"
+                  type="file"
+                  accept="image/*"
+                  class="hidden"
+                  @change="onAvatarSelected"
+              />
+            </div>
+
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label class="block text-sm font-medium text-gray-700">
@@ -184,25 +212,6 @@
                 {{ $t('profile.settings.changePassword') }}
               </button>
 
-              <!-- Налаштування сповіщень -->
-              <div class="mt-6">
-                <label class="flex items-center">
-                  <input
-                      type="checkbox"
-                      v-model="settingsData.emailNotifications"
-                      class="h-4 w-4 text-azure border-gray-300 rounded focus:ring-azure"
-                  />
-                  <span class="ml-2 text-sm text-gray-700">
-                    {{ $t('profile.settings.emailNotifications') }}
-                  </span>
-                </label>
-              </div>
-              <button
-                  @click="saveSettings"
-                  class="mt-4 bg-azure text-white px-4 py-2 rounded-md hover:bg-cerulean transition-colors duration-200 w-full sm:w-auto"
-              >
-                {{ $t('profile.settings.saveSettings') }}
-              </button>
 
               <!-- Кнопка виходу -->
               <div class="mt-6">
@@ -230,12 +239,12 @@
                 <div>
                   <p class="font-medium text-gray-900">{{ review.product }}</p>
                   <p class="text-sm text-gray-500">{{ review.date }}</p>
-                  <p class="text-sm text-gray-700">
-                    {{ $t('profile.reviews.rating') }}: {{ review.rating }}/5
-                  </p>
+<!--                  <p class="text-sm text-gray-700">-->
+<!--                    {{ $t('profile.reviews.rating') }}: {{ review.rating }}/5-->
+<!--                  </p>-->
                   <p class="text-gray-600">{{ review.comment }}</p>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-2">
+<!--                <div class="flex flex-col sm:flex-row gap-2">
                   <button class="text-azure hover:underline text-sm">
                     {{ $t('profile.reviews.edit') }}
                   </button>
@@ -245,13 +254,13 @@
                   >
                     {{ $t('profile.reviews.delete') }}
                   </button>
-                </div>
+                </div>-->
               </div>
             </div>
           </div>
 
           <!-- --- Вкладка: Бонуси/знижки --- -->
-          <div v-if="activeTab === 'bonuses'" class="space-y-6">
+<!--          <div v-if="activeTab === 'bonuses'" class="space-y-6">
             <div class="space-y-6">
               <div>
                 <h3 class="text-lg font-medium text-gray-900">
@@ -288,7 +297,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div>-->
         </div>
       </div>
     </div>
@@ -301,6 +310,9 @@ import { useAuthStore } from '~/store/user/auth.js';
 import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import { apiMethods } from '~/composables/api/methods/apiMethods.js';
+import {responseFormat} from "~/composables/api/responses/responseFormat.js";
+import {useModalInfoStore} from "~/store/modals/info.js";
+import avatarImg from '~/assets/img/deafult_avatar.png';
 
 definePageMeta({
   middleware: 'is-auth',
@@ -308,6 +320,7 @@ definePageMeta({
 });
 
 const authStore = useAuthStore();
+const modalInfoStore = useModalInfoStore();
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
@@ -329,6 +342,8 @@ const userData = ref({
 });
 const isEditing = ref(false);
 
+const avatarInput = ref(null);
+
 // Замовлення, відгуки, бонуси (поки що можна ставити порожні масиви — можна потім окремо запитувати)
 const orders = ref([]);
 const reviews = ref([]);
@@ -338,7 +353,6 @@ const promoCodes = ref([]);
 const passwordData = ref({
   currentPassword: '',
   newPassword: '',
-  newPasswordConfirmation: ''
 });
 const settingsData = ref({
   emailNotifications: true
@@ -359,7 +373,7 @@ const fetchProfile = async () => {
       email: user.email || '',
       phone: user.phone || '',
       bio: user.bio || '',
-      avatar: user.avatar ? `/storage/${user.avatar}` : ''  // якщо в базі зберігається шлях у storage/app/public
+      avatar: user.avatar_url || avatarImg  // якщо в базі зберігається шлях у storage/app/public
     };
 
     // Якщо у відповіді були також orders / reviews / bonuses / promoCodes:
@@ -395,7 +409,7 @@ onMounted(async () => {
     {id: 'orders', name: t('profile.tabs.orders')},
     {id: 'settings', name: t('profile.tabs.settings')},
     {id: 'reviews', name: t('profile.tabs.reviews')},
-    {id: 'bonuses', name: t('profile.tabs.bonuses')}
+    // {id: 'bonuses', name: t('profile.tabs.bonuses')}
   ];
 
   const tabFromUrl = route.query.tab;
@@ -457,7 +471,6 @@ const saveProfile = async () => {
       surname: userData.value.surname,
       email: userData.value.email,
       phone: userData.value.phone,
-      bio: userData.value.bio
     };
     await apiMethods.updateProfile(payload);
 
@@ -476,44 +489,108 @@ const cancelEdit = () => {
   fetchProfile();
 };
 
+// Викликає прихований <input type="file">
+const triggerAvatarInput = () => {
+  if (avatarInput.value) {
+    avatarInput.value.click();
+  }
+};
+
+// Коли користувач вибрав файл
+const onAvatarSelected = async (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // Перевірити mime-type / розмір (наприклад не більше 2МБ) додатково на фронті, якщо хочеться
+  const maxSize = 2 * 1024 * 1024; // 2 МБ
+  if (file.size > maxSize) {
+    alert('Розмір файлу не може перевищувати 2 МБ');
+    return;
+  }
+
+  // Формуємо FormData для відправки
+  const formData = new FormData();
+  formData.append('avatar', file);
+
+  try {
+    // Викликаємо ендпоінт uploadAvatar
+    const response = await apiMethods.uploadAvatar(formData);
+    // Успішно отримали avatar_url
+    const newAvatarUrl = response.data.avatar_url;
+    // Оновлюємо локально userData.avatar, щоб картинка оновилася
+    userData.value.avatar = newAvatarUrl;
+    // Якщо в базі змінився шлях, можна за потреби оновити інші поля
+  } catch (error) {
+    console.error('Помилка при завантаженні аватара:', error);
+    if (error.statusCode === 422) {
+      alert('Невірний формат або перевищено розмір файла');
+    } else if (error.statusCode === 401) {
+      alert('Ви не авторизовані. Будь ласка, увійдіть ще раз.');
+      authStore.logout();
+      router.push('/login');
+    } else {
+      alert('Щось пішло не так. Спробуйте пізніше.');
+    }
+  } finally {
+    // Скидаємо значення інпута, щоб можна було завантажити той самий файл вдруге, якщо потрібно
+    if (avatarInput.value) {
+      avatarInput.value.value = null;
+    }
+  }
+};
+
+
 // Зміна пароля
 const changePassword = async () => {
   try {
-    await apiMethods.changePassword({
+    const resp = await apiMethods.changePassword({
       current_password: passwordData.value.currentPassword,
       new_password: passwordData.value.newPassword,
-      new_password_confirmation: passwordData.value.newPasswordConfirmation
     });
     // Очистимо поля після успіху
     passwordData.value = {
       currentPassword: '',
       newPassword: '',
-      newPasswordConfirmation: ''
     };
-    alert(t('profile.settings.passwordChanged')); // або показати toast
+console.log(resp)
+      await modalInfoStore.openModal(
+          resp.status,
+          await responseFormat.response(resp.error.message)
+      );
+
   } catch (error) {
     console.error('Помилка при зміні пароля:', error);
-    // Можна показати повідомлення користувачу
-    if (error.statusCode === 422) {
-      alert(error.data.error.message || 'Помилка валідації');
-    }
+    await modalInfoStore.openModal(
+        resp.status,
+        await responseFormat.response(resp.error.message)
+    );
   }
 };
 
-// Збереження налаштувань (наприклад, прапорець emailNotifications)
-// Якщо бекенд не підтримує окремий ендпоінт, можна реалізувати аналогічно через updateProfile
-const saveSettings = async () => {
+// Завантажити свої відгуки
+async function fetchUserReviews() {
   try {
-    // Якщо ви мають окремий ендпоінт для налаштувань, викликайте його
-    // але якщо налаштування зберігаються в тій же моделі User, можна передавати частину полів через updateProfile:
-    await apiMethods.updateProfile({
-      email_notifications: settingsData.value.emailNotifications
-    });
-    alert(t('profile.settings.saved'));
-  } catch (error) {
-    console.error('Не вдалося зберегти налаштування:', error);
+    const response = await apiMethods.getUserComments()
+    if (response?.status) {
+      // Припускаємо, що API повертає { data: { comments: [...] } }
+      reviews.value = response.data.comments.map(c => ({
+        id:         c.id,
+        product:    c.product.name,
+        date:       c.created_at,
+        // rating:     c.rating ?? '-',     // якщо у вас є рейтинг
+        comment:    c.body,
+      }))
+    }
+  } catch (e) {
+    console.error('Не вдалося завантажити відгуки:', e)
   }
-};
+}
+
+watch(activeTab, (newTab) => {
+  if (newTab === 'reviews') {
+    fetchUserReviews()
+  }
+})
 
 // Видалити відгук
 const deleteReview = (id) => {

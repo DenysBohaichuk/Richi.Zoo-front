@@ -62,6 +62,27 @@ export const apiMethods = {
     },
 
     /**
+     * Отримати коментарі товару
+     */
+    async getProductComments(id){
+        return await productService.getProductComments(id)
+    },
+
+    /**
+     * Створення коментаря товару
+     */
+    async postProductComments(id, payload){
+        return await productService.postProductComments(id, payload)
+    },
+
+    /**
+     * Створення коментаря товару
+     */
+    async getUserComments(){
+        return await userService.getReviews()
+    },
+
+    /**
      * Отримання методів доставки
      */
     async getDeliveryMethods(){
@@ -83,9 +104,38 @@ export const apiMethods = {
     },
 
     /**
+     * Оновити профіль юзера
+     */
+    async updateProfile(payload){
+        return await userService.updateProfile(payload);
+    },
+
+    /**
+     * Оновити аватар юзера
+     */
+    async uploadAvatar(payload){
+        return await userService.uploadAvatar(payload);
+    },
+
+    /**
+     * Оновити пароль юзера
+     */
+    async changePassword(payload){
+        console.log(await userService.changePassword(payload))
+        return await userService.changePassword(payload);
+    },
+
+    /**
      * Отримання контенту для сторінки
      */
     async getPageContent(slug){
         return await pageService.getContent(slug);
+    },
+
+    /**
+     * Оплата замовлення
+     */
+    async payment(orderId){
+        return await orderService.payment(orderId);
     },
 }

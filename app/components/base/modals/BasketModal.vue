@@ -58,7 +58,7 @@
                           </div>
 
                           <div class="flex flex-1 items-end justify-between pt-2">
-                            <p class="mt-1 text-sm font-medium text-gray-900">{{ product.price }}</p>
+                            <p class="mt-1 text-sm font-medium text-gray-900">{{ product.price }} грн</p>
 
                             <div class="ml-4">
                               <label :for="`quantity-${productIdx}`" class="sr-only">Quantity, {{ product.name }}</label>

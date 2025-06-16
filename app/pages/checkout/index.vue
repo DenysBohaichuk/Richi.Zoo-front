@@ -229,33 +229,52 @@
               </div>
             </dl>
 
-            <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
-              <button type="submit"
-                      :disabled="!products || products.length === 0"
-                      class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                      :class="{'opacity-50 cursor-not-allowed': !products || products.length === 0}">
-                {{ $t('checkout.confirm_order') }}
-              </button>
+                    <div class="border-t border-gray-200 px-4 py-6 sm:px-6 space-y-4">
+                      <button
+                        type="submit"
+                        :disabled="!products || products.length === 0"
+                        class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
+                        :class="{ 'opacity-50 cursor-not-allowed': !products || products.length === 0 }"
+                      >
+                        {{ $t('checkout.confirm_order') }}
+                      </button>
+
+                      <!-- LiqPay Payment Form -->
+                      <div v-if="form.action">
+                        <form :action="form.action" method="POST" accept-charset="utf-8">
+                          <input type="hidden" name="data" :value="form.data" />
+                          <input type="hidden" name="signature" :value="form.signature" />
+                          <button
+                            type="submit"
+                            class="w-full rounded-md border border-transparent bg-green-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                            :disabled="!products || products.length === 0"
+                            :class="{ 'opacity-50 cursor-not-allowed': !products || products.length === 0 }"
+                          >
+                            Оплатити через LiqPay
+                          </button>
+                        </form>
+                        <p class="mt-2 text-sm text-gray-600 text-center">Ви будете перенаправлені на LiqPay для завершення оплати.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-      </form>
-    </div>
-  </div>
-</div>
-</template>
+      </template>
 
 <script setup>
 import {ref, computed, onMounted, watch} from 'vue';
 import {RadioGroup, RadioGroupDescription, RadioGroupLabel, RadioGroupOption} from '@headlessui/vue';
 import {CheckCircleIcon, TrashIcon} from '@heroicons/vue/20/solid';
-import {useCheckoutValidation} from '@/utils/forms/checkoutValidation.js';
+import {useCheckoutValidation} from '~/utils/forms/checkoutValidation.js';
 import {
   removeFromBasket,
   saveBasketToLocalStorage,
   computeFeatureTypes,
   calculateTotalAmount
-} from '@/utils/basketService.js';
+} from '~/utils/basketService.js';
 import {useProductBasketStore} from '~/store/modals/basket.js';
 import {
   cityQuery,
@@ -296,6 +315,12 @@ const {
 // Загальна сума замовлення
 const totalAmount = computed(() => calculateTotalAmount(products.value));
 
+// LiqPay form data
+const form = ref({
+  action: null,
+  data: null,
+  signature: null,
+});
 
 // Функція для обробки відправки форми
 function onSubmit() {
@@ -316,9 +341,9 @@ function onSubmit() {
     }
 
     // Формуємо масив товарів для відправки
-    const items = products.value.map(product => ({
+    const items = products.value.map((product) => ({
       product_id: product.id,
-      quantity: product.quantity
+      quantity: product.quantity,
     }));
 
     // Якщо валідація пройдена успішно, формуємо payload
@@ -330,7 +355,7 @@ function onSubmit() {
       cityRef: selectedCity.value.Ref,
       warehouseRef: selectedWarehouse.value.Ref,
       deliveryMethodId: selectedDeliveryMethod.value.id,
-      products: items
+      products: items,
     };
 
     console.log('Дані для відправки:', payload);
@@ -339,8 +364,11 @@ function onSubmit() {
       const response = await apiMethods.createOrder(payload);
 
       if (response.status) {
-        // Якщо статус true, очищаємо форму
-        firstNameValue.value = '';
+        // Отримуємо orderId з відповіді
+        const orderId = response.data.order.id;
+
+        // Очищаємо форму та кошик
+/*        firstNameValue.value = '';
         lastNameValue.value = '';
         phoneValue.value = '';
         emailValue.value = '';
@@ -348,9 +376,16 @@ function onSubmit() {
         clearWarehouse();
         products.value.forEach((product) => {
           removeFromBasket(product)
-        })
-        navigateTo('/');
-        createFlashAlert('success', response.data.message); // або показати повідомлення користувачеві іншим способом
+        })*/
+      //  navigateTo('/');
+        try {
+          const paymentResponse = await apiMethods.payment(orderId);
+          form.value = paymentResponse.data; // Припускаємо, що paymentResponse містить { action, data, signature }
+          createFlashAlert('success', response.data.message); // Зберігаємо повідомлення про успіх
+        } catch (paymentError) {
+          console.error('Помилка при отриманні даних для оплати:', paymentError);
+          createFlashAlert('error', 'Не вдалося підготувати оплату');
+        }// або показати повідомлення користувачеві іншим способом
       } else {
         // Якщо статус false, виводимо повідомлення про помилку
          console.error('Помилка сервера:', response.data.message);
@@ -381,6 +416,7 @@ onMounted(async () => {
     console.error('Помилка при отриманні методів доставки:', error);
   }
 });
+
 onBeforeUnmount(() => {
   cityQuery.value = '';
   selectedCity.value = null;
@@ -388,6 +424,7 @@ onBeforeUnmount(() => {
   selectedWarehouse.value = null;
   clearWarehouse();
 });
+
 // Спостерігаємо за зміною запиту міста
 watch(cityQuery, (newVal) => {
   if (!newVal) {

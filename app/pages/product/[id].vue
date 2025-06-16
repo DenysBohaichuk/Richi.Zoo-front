@@ -223,6 +223,54 @@
 
           </div>
         </section>
+
+        <section class="mt-14 border-t border-gray-200 px-4 pb-16 sm:px-0">
+          <h2 class="text-2xl font-semibold mb-4">Коментарі</h2>
+
+          <!-- Список дозволених коментарів -->
+          <div v-if="comments.length" class="space-y-4">
+            <div
+                v-for="c in comments"
+                :key="c.id"
+                class="p-4 bg-gray-50 border border-gray-200 rounded-lg"
+            >
+              <div class="flex justify-between items-center mb-2">
+                <span class="font-medium text-gray-800">{{ c.user.name }}</span>
+                <span class="text-sm text-gray-500">{{ formatDate(c.created_at) }}</span>
+              </div>
+              <p class="text-gray-700">{{ c.body }}</p>
+            </div>
+          </div>
+          <div v-else class="text-gray-500">
+            Ще немає коментарів.
+          </div>
+
+          <!-- Форма для додавання коментаря -->
+          <div v-if="isLoggedIn" class="mt-6">
+            <h3 class="text-lg font-medium mb-2">Залишити коментар</h3>
+            <textarea
+                v-model="body"
+                rows="4"
+                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                placeholder="Ваш коментар..."
+            ></textarea>
+            <p v-if="error" class="mt-1 text-sm text-red-600">{{ error }}</p>
+            <button
+                @click.prevent="submitComment"
+                :disabled="submitting"
+                class="mt-3 inline-flex items-center px-4 py-2 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 disabled:opacity-50"
+            >
+              {{ submitting ? 'Відправляю...' : 'Опублікувати' }}
+            </button>
+          </div>
+
+          <!-- Повідомлення для неавторизованих -->
+          <div v-else class="mt-6 text-gray-600">
+            Щоб залишати коментарі, будь ласка,
+            <NuxtLink to="/login" class="text-indigo-600 hover:underline">увійдіть</NuxtLink>.
+          </div>
+        </section>
+
         <!--        <section aria-labelledby="related-heading" class="mt-10 border-t border-gray-200 px-4 py-16 sm:px-0">-->
         <!--          <h2 id="related-heading" class="text-xl font-bold text-gray-900">Customers also bought</h2>-->
 
@@ -260,6 +308,60 @@
 <script setup>
 
 import {useProductsBasket} from "~/composables/products/basketHandler.js";
+import { useAuthStore } from '~/store/user/auth'
+const auth = useAuthStore()
+const isLoggedIn = computed(() => auth.isLoggedIn)
+
+
+const comments   = ref([])
+const body       = ref('')
+const error      = ref('')
+const submitting = ref(false)
+
+// Форматування дати
+function formatDate(dt) {
+  const d = new Date(dt)
+  return d.toLocaleDateString('uk-UA', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
+// Завантажити дозволені коментарі
+async function fetchComments() {
+  const response =  await apiMethods.getProductComments(product.value.id);
+
+  if (response?.status) {
+    comments.value = response?.data.comments
+  }
+}
+
+// Відправити новий коментар (потрапить у статус pending)
+async function submitComment() {
+  if (!body.value.trim()) {
+    error.value = 'Напишіть текст коментаря.'
+    return
+  }
+  submitting.value = true
+  error.value      = ''
+  try {
+    const response = await apiMethods.postProductComments(product.value.id, { body: body.value })
+    if (response?.status) {
+      body.value = ''
+      error.value = 'Дякуємо! Ваш коментар відправлено на модерацію.'
+    } else {
+      throw new Error(response?.message || 'Помилка при відправленні.')
+    }
+  } catch (e) {
+    error.value = e.message
+  } finally {
+    submitting.value = false
+  }
+}
+
 
 definePageMeta({
   middleware: ['get-product']
@@ -304,6 +406,7 @@ import {
 
 import {getDataFromStore} from "~/mixins/MixinProduct.js";
 import {useProductBasketStore} from "~/store/modals/basket.js";
+import {apiMethods} from "~/composables/api/methods/apiMethods.js";
 
 const appConfig = useAppConfig();
 const runtimeConfig = useRuntimeConfig();
@@ -462,6 +565,8 @@ onMounted(() => {
       updateIndicator(0, groupIndex);
     }
   });
+
+  fetchComments();
 });
 
 useHead({

@@ -29,7 +29,7 @@ export default function useAuth() {
             };
 
             const responseAuth = await authModule.googleAuth(user.value);
-
+console.log(responseAuth)
             if (!responseAuth.status) {
                 await modalInfoStore.openModal(
                     responseAuth.status,

@@ -169,6 +169,19 @@
             <div class="lg:col-span-3">
               <TemplatesProductGrid :products="products"/>
 
+              <div v-if="pagination && pagination.last_page" class="mt-8 flex justify-center space-x-2">
+                <button
+                    v-for="page in pagination.last_page"
+                    :key="page"
+                    @click="changePage(page)"
+                    :class="[
+      'px-4 py-2 border rounded',
+      page === pagination.current_page ? 'bg-gray-900 text-white' : 'bg-white text-gray-900'
+    ]"
+                >
+                  {{ page }}
+                </button>
+              </div>
             </div>
           </div>
         </section>
@@ -208,13 +221,15 @@ const mobileFiltersOpen = ref(false)
 const props = defineProps({
   category: Object,
   products: Array,
+  pagination: Object,
   filters: Array
 });
 
-
+console.log(props)
 const category = props.category;
 const products = ref(props.products);
 const filters = ref(props.filters);
+const pagination = computed(() => props.pagination);
 
 
 const route = useRoute();
@@ -226,6 +241,7 @@ watch(
       products.value = newProducts;
     },
 );
+
 
 const selectedFilters = ref({});
 
@@ -274,7 +290,12 @@ function initializeFiltersFromQuery(query) {
 
 
 function updateUrlWithFilters() {
-  const query = {...route.query};
+  const query = buildQueryWithFilters({ page: 1 });
+  router.push({ query }).catch(() => {});
+}
+
+function buildQueryWithFilters(overrides = {}) {
+  const query = { ...route.query };
 
   Object.keys(selectedFilters.value).forEach(filterName => {
     const values = selectedFilters.value[filterName];
@@ -290,8 +311,7 @@ function updateUrlWithFilters() {
     }
   });
 
-  router.push({query}).catch(() => {
-  }); // Оновлення URL без перезавантаження
+  return { ...query, ...overrides };
 }
 
 function toggleFilterValue(filterName, valueId) {
@@ -309,6 +329,16 @@ console.log(props.products)
   }
 }
 
+
+function changePage(page) {
+  const query = buildQueryWithFilters({ page });
+  router.push({ query }).catch(() => {});
+}
+
+
+watch(() => props.pagination, (newPag) => {
+  pagination.value = newPag
+})
 
 // Визначаємо текст для мета-опису
 const categoryDescription = category.plainDescription?.trim() || 'Перегляньте наші товари у категорії...';

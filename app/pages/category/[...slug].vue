@@ -12,7 +12,7 @@
     </div>
     <div v-else class="">
       <div class="">
-        <TemplatesProductsListView :category="category" :products="products" :filters="filters"/>
+        <TemplatesProductsListView :category="category" :products="products" :pagination="pagination" :filters="filters"/>
       </div>
     </div>
   </div>
@@ -30,6 +30,7 @@ definePageMeta({
 
 const breadcrumbs = ref([]);
 const products = ref([]);
+const pagination = ref([]);
 const filters = ref([]);
 const category = ref([]);
 const subcategories = ref([]);
@@ -39,6 +40,7 @@ onMounted(async () => {
     const data = await getDataFromStore();
     breadcrumbs.value = data.breadcrumbs;
     products.value = data.products;
+    pagination.value = data.pagination;
     filters.value = data.filters;
     category.value = data.category;
     subcategories.value = data.subcategories;
@@ -48,6 +50,7 @@ onMounted(async () => {
   watch(() => useCategoryStore().categoryData, async () => {
     const data = await getDataFromStore();
     products.value = data.products;
+    pagination.value = data.pagination;
   });
 })
 

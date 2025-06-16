@@ -11,5 +11,11 @@ export const orderService = {
         const { response, postData } = getApiService();
         await postData(apiPath.create_order, payload);
         return responseFormat.response(response.value);
-    }
+    },
+
+    async payment(id) {
+        const { response, fetchData } = getApiService();
+        await fetchData(`${apiPath.payment(id)}`);
+        return responseFormat.response(response.value);
+    },
 };

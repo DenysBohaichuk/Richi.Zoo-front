@@ -5,6 +5,7 @@ export async function getDataFromStore(){
     const category = data.category
     const subcategories = data.subcategories
     const products = data.products
+    const pagination = data.pagination
     const filters = data.filters
     const breadcrumbs = data.breadcrumbs
 
@@ -12,6 +13,7 @@ export async function getDataFromStore(){
         category,
         subcategories,
         products,
+        pagination,
         filters,
         breadcrumbs
     }

@@ -1,4 +1,4 @@
-// store/modals/user/auth.js
+// store/user/auth.js
 import {defineStore} from 'pinia';
 import apiPath from "~/composables/api/endpoints/apiPaths.js";
 import getApiService from "~/composables/api/services/getApiService.js";

@@ -17,6 +17,7 @@ export default function apiService(apiClient) {
         try {
             return await requestFn();
         } catch (err) {
+            console.log(err);
             // якщо 401 – спробуємо оновити токен
             if (err.response?.status === 401 && authStore.refreshToken) {
                 try {
@@ -33,7 +34,8 @@ export default function apiService(apiClient) {
                     return;
                 }
             }
-            return { status: false, data: null, error: { message: err.message } }
+
+            return { status: false, data: null, error: { message: err.response.data.error.message } }
         }
     }
 
@@ -44,6 +46,9 @@ export default function apiService(apiClient) {
             const resp = await requestWithRefresh(() =>
                 apiClient.get(path, { headers: headers })
             );
+            if (!resp.data?.status) {
+                throw resp;
+            }
 
             response.value = resp.data;
             data.value = resp.data;
@@ -66,9 +71,14 @@ export default function apiService(apiClient) {
             const resp = await requestWithRefresh(() =>
                 apiClient.post(path, payload, { headers: headers })
             );
+            if (!resp.data?.status) {
+                throw resp;
+            }
+
             response.value = resp.data;
             data.value = resp.data;
         } catch (err) {
+            console.log('catch')
 
             if (err.message === "Network Error") {
                 response.value = networkErr;
@@ -87,12 +97,17 @@ export default function apiService(apiClient) {
             const resp = await requestWithRefresh(() =>
                 apiClient.put(path, payload, { headers: headers })
             );
-            response.value = resp.data;
+            if (!resp.data?.status) {
+                throw resp;
+            }
+
+            response.value = resp;
             data.value = resp.data;
         } catch (err) {
             if (err.message === "Network Error") {
                 response.value = networkErr;
             } else {
+                console.log(err)
                 response.value = err;
             }
         } finally {
@@ -107,6 +122,10 @@ export default function apiService(apiClient) {
             const resp = await requestWithRefresh(() =>
                 apiClient.delete(path, { headers: headers })
             );
+            if (!resp.data?.status) {
+                throw resp;
+            }
+
             response.value = resp.data;
             data.value = resp.data;
         } catch (err) {
