@@ -97,6 +97,13 @@ export const apiMethods = {
     },
 
     /**
+     * Створення замовлення
+     */
+    async getUserOrders(){
+        return await orderService.getOrders();
+    },
+
+    /**
      * Отримати дані юзера
      */
     async getProfile(){

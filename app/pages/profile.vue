@@ -172,7 +172,7 @@
                       :to="`/order/${order.id}`"
                       class="text-azure hover:underline text-sm"
                   >
-                    {{ $t('profile.orders.details') }}
+<!--                    {{ $t('profile.orders.details') }}-->
                   </NuxtLink>
                 </div>
               </div>
@@ -590,7 +590,28 @@ watch(activeTab, (newTab) => {
   if (newTab === 'reviews') {
     fetchUserReviews()
   }
+  if (newTab === 'orders') {
+    fetchUserOrders()
+  }
 })
+
+async function fetchUserOrders() {
+  try {
+    const response = await apiMethods.getUserOrders()
+    if (response?.status) {
+      // Припускаємо, що API повертає { data: { comments: [...] } }
+      orders.value = response.data.map(c => ({
+        id:         c.id,
+        status:    c.status,
+        date:       c.created_at,
+        total:      c.total,
+
+      }))
+    }
+  } catch (e) {
+    console.error('Не вдалося завантажити замовлення:', e)
+  }
+}
 
 // Видалити відгук
 const deleteReview = (id) => {

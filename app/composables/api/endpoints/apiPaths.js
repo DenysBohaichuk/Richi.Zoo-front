@@ -19,6 +19,7 @@ const apiPaths = {
     delivery_methods: '/delivery-methods',
 
     create_order: '/create-order',
+    get_orders: '/user/orders',
 
     user: '/user',
     user_avatar: '/user/avatar',
